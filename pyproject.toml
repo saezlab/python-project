@@ -42,7 +42,7 @@ sphinx-last-updated-by-git = ">=0.3"
 sphinx-autodoc-typehints = ">=1.18.0"
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/saezlab/python-template/issues"
+"Bug Tracker" = "https://github.com/saezlab/python-project/issues"
 
 [tool.black]
 line-length = 80

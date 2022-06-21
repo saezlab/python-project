@@ -46,7 +46,7 @@ Clone the repo in your new project directory, and enter the directory:
 
 .. code:: bash
 
-   git clone https://github.com/saezlab/python_project new_project
+   git clone https://github.com/saezlab/python-project new_project
    cd new_project
 
 Project git repo
