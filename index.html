@@ -43,7 +43,20 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">Introduction</a></li>
 <li><a class="reference internal" href="#python-project-template">Python project template</a><ul>
-<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#setup">Setup</a><ul>
+<li><a class="reference internal" href="#project-name">Project name</a></li>
+<li><a class="reference internal" href="#install-tools">Install tools</a></li>
+<li><a class="reference internal" href="#copy-the-template">Copy the template</a></li>
+<li><a class="reference internal" href="#project-git-repo">Project git repo</a></li>
+<li><a class="reference internal" href="#rename-it">Rename it</a></li>
+<li><a class="reference internal" href="#add-your-name">Add your name</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#setup-the-tools">Setup the tools</a></li>
+<li><a class="reference internal" href="#choose-your-code-formatter">Choose your code formatter</a></li>
+<li><a class="reference internal" href="#set-up-your-linter">Set up your linter</a></li>
+<li><a class="reference internal" href="#docs-with-sphinx">Docs with Sphinx</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#usage">Usage</a><ul>
 <li><a class="reference internal" href="#do-a-commit-without-running-pre-commit-hooks">Do a commit without running pre-commit hooks</a></li>
 <li><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
@@ -110,21 +123,35 @@ out the <a class="reference external" href="https://github.com/saezlab/HowTo/blo
 page in <a class="reference external" href="https://docs.google.com/spreadsheets/d /1by744ceMxt57egyq8Q4SZUfzLRhNG6BtlpoD3ljgp90/edit#gid=0">this spreadsheet</a>.</p>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h2>
+<section id="project-name">
+<h3>Project name<a class="headerlink" href="#project-name" title="Permalink to this heading"></a></h3>
 <p>Find a name for your project. Below we use the placeholder <code class="docutils literal notranslate"><span class="pre">new_project</span></code>.</p>
+</section>
+<section id="install-tools">
+<h3>Install tools<a class="headerlink" href="#install-tools" title="Permalink to this heading"></a></h3>
 <p>Make sure the necessary management tools are installed on your system:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -sSL https://install.python-poetry.org <span class="p">|</span> python3 -
 pip install --user tox pre-commit
 </pre></div>
 </div>
+</section>
+<section id="copy-the-template">
+<h3>Copy the template<a class="headerlink" href="#copy-the-template" title="Permalink to this heading"></a></h3>
 <p>Clone the repo in your new project directory, and enter the directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/saezlab/python_project new_project
 <span class="nb">cd</span> new_project
 </pre></div>
 </div>
+</section>
+<section id="project-git-repo">
+<h3>Project git repo<a class="headerlink" href="#project-git-repo" title="Permalink to this heading"></a></h3>
 <p>Create a repo for your project and make the cloned repo point to this repo:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote origin set-url git@github.com:saezlab/new_project
 </pre></div>
 </div>
+</section>
+<section id="rename-it">
+<h3>Rename it<a class="headerlink" href="#rename-it" title="Permalink to this heading"></a></h3>
 <p>Change the placeholder <code class="docutils literal notranslate"><span class="pre">project_name</span></code> used in this template in all files.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -137,6 +164,9 @@ git add -u
 git commit -nm <span class="s1">&#39;set project name&#39;</span>
 </pre></div>
 </div>
+</section>
+<section id="add-your-name">
+<h3>Add your name<a class="headerlink" href="#add-your-name" title="Permalink to this heading"></a></h3>
 <p>Change the author name and email in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and the headers of
 all files in the module directory. Commit the changes.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/Denes Turei/Your Name/g&#39;</span> <span class="o">{}</span> +
@@ -145,6 +175,9 @@ git add -u
 git commit -nm <span class="s1">&#39;set author&#39;</span>
 </pre></div>
 </div>
+</section>
+<section id="license">
+<h3>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h3>
 <p>Change the license if necessary (by default it’s GNU GPL v3). Copy over the
 <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file with the text of your license and edit the license field in
 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. Find a <a class="reference external" href="https://www.gnu.org/licenses/license-list.en.html">list of licenses here</a> and the <a class="reference external" href="https://python-poetry.org/docs/pyproject/#license">notation used by
@@ -158,6 +191,9 @@ git add pyproject.toml
 git commit -nm <span class="s1">&#39;set license to MIT&#39;</span>
 </pre></div>
 </div>
+</section>
+<section id="setup-the-tools">
+<h3>Setup the tools<a class="headerlink" href="#setup-the-tools" title="Permalink to this heading"></a></h3>
 <p>Initialize <code class="docutils literal notranslate"><span class="pre">poetry</span></code> and <code class="docutils literal notranslate"><span class="pre">tox</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry update
 poetry install
@@ -176,21 +212,31 @@ will come into action, install all the tools listed in
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit install
 </pre></div>
 </div>
-<p>Choose your code formatter. In the config there are three code formatter set
-up but all disabled. These are YAPF, Black and fixit. To enable one of them,
-remove the <code class="docutils literal notranslate"><span class="pre">stages:</span> <span class="pre">[manual]</span></code> from its hook. In this case the code formatter
-will run and change your files upon each commit. If you prefer to run it only
-manually, you can do it by the command below (in this example YAPF):</p>
+</section>
+<section id="choose-your-code-formatter">
+<h3>Choose your code formatter<a class="headerlink" href="#choose-your-code-formatter" title="Permalink to this heading"></a></h3>
+<p>In the config there are three code formatter set up but all disabled. These
+are YAPF, Black and fixit. To enable one of them, remove the
+<code class="docutils literal notranslate"><span class="pre">stages:</span> <span class="pre">[manual]</span></code> from its hook. In this case the code formatter will run
+and change your files upon each commit. If you prefer to run it only manually,
+you can do it by the command below (in this example YAPF):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit run yapf --hook-stage manual
 </pre></div>
 </div>
-<p>Set up your linter. In the <code class="docutils literal notranslate"><span class="pre">tool.flake8</span></code> section of <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>,
+</section>
+<section id="set-up-your-linter">
+<h3>Set up your linter<a class="headerlink" href="#set-up-your-linter" title="Permalink to this heading"></a></h3>
+<p>In the <code class="docutils literal notranslate"><span class="pre">tool.flake8</span></code> section of <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>,
 add the codes of general or directory or file specific exceptions. In
 code files for individual cases use the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">noqa:</span></code> tags.</p>
+</section>
+<section id="docs-with-sphinx">
+<h3>Docs with Sphinx<a class="headerlink" href="#docs-with-sphinx" title="Permalink to this heading"></a></h3>
 <p>A Github action is set up to build and publish your documentation on Github.
 Edit <code class="docutils literal notranslate"><span class="pre">docs/src/index.rst</span></code>, the main page of your documentation. You can
 decide to leave the current readme included or write a completely different
 document in <code class="docutils literal notranslate"><span class="pre">docs/src/index.rst</span></code>.</p>
+</section>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
@@ -250,7 +296,7 @@ latest version of your project.</p>
 <section id="reference">
 <h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading"></a></h1>
 <section id="module-project_name">
-<span id="project-name"></span><h2>project_name<a class="headerlink" href="#module-project_name" title="Permalink to this heading"></a></h2>
+<span id="id1"></span><h2>project_name<a class="headerlink" href="#module-project_name" title="Permalink to this heading"></a></h2>
 <p>Python project template.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="project_name.twentythree">
