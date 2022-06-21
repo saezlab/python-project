@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; project_name  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> project_name
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Introduction</a></li>
+<li><a class="reference internal" href="#python-project-template">Python project template</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#do-a-commit-without-running-pre-commit-hooks">Do a commit without running pre-commit hooks</a></li>
+<li><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
+<li><a class="reference internal" href="#add-a-new-dependency">Add a new dependency</a></li>
+<li><a class="reference internal" href="#build-the-docs">Build the docs</a></li>
+<li><a class="reference internal" href="#why-should-i-run-everything-by-poetry-run">Why should I run everything by <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span></code>?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference">Reference</a><ul>
+<li><a class="reference internal" href="#module-project_name">project_name</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-tables-and-search">Indices, Tables, and Search</a></li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">project_name</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<p>Created from a project template. Please write the docs of your project here,
+and remove the parts below (or edit <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> in the project root).</p>
+</section>
+<section id="python-project-template">
+<h1>Python project template<a class="headerlink" href="#python-project-template" title="Permalink to this heading"></a></h1>
+<p>Create your new Python project by forking this repo. This way you start with
+a number of helpful development tools set up for you. These tools are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://python-poetry.org/">Poetry build system</a></p></li>
+<li><p><a class="reference external" href="https://tox.wiki/en/latest/">Tox testing</a></p></li>
+<li><p><a class="reference external" href="https://pre-commit.com/">Pre-commit hooks</a> for formatting, linting,
+not only Python but also YAML and rST</p></li>
+<li><p><a class="reference external" href="https://docs.pytest.org/">Tests with pytest</a></p></li>
+<li><p><a class="reference external" href="https://github.com/c4urself/bump2version">Bump2version</a> version
+increment tool</p></li>
+<li><p>Documentation build with <a class="reference external" href="https://www.sphinx-doc.org/en/master/">Sphinx</a></p></li>
+</ul>
+<p>This repo is part of the effort towards improving development practices in
+our group. For more information on these aims and the tools themselves, check
+out the <a class="reference external" href="https://github.com/saezlab/HowTo/blob/master /HowTo_efficient_development.md">Efficient development</a> page of the group Howto, and the Tools
+page in <a class="reference external" href="https://docs.google.com/spreadsheets/d /1by744ceMxt57egyq8Q4SZUfzLRhNG6BtlpoD3ljgp90/edit#gid=0">this spreadsheet</a>.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h2>
+<p>Find a name for your project. Below we use the placeholder <code class="docutils literal notranslate"><span class="pre">new_project</span></code>.</p>
+<p>Make sure the necessary management tools are installed on your system:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -sSL https://install.python-poetry.org <span class="p">|</span> python3 -
+pip install --user tox pre-commit
+</pre></div>
+</div>
+<p>Clone the repo in your new project directory, and enter the directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/saezlab/python_project new_project
+<span class="nb">cd</span> new_project
+</pre></div>
+</div>
+<p>Create a repo for your project and make the cloned repo point to this repo:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote origin set-url git@github.com:saezlab/new_project
+</pre></div>
+</div>
+<p>Change the placeholder <code class="docutils literal notranslate"><span class="pre">project_name</span></code> used in this template in all files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on a non-BSD system (e.g. GNU), remove the first argument for
+<code class="docutils literal notranslate"><span class="pre">sed</span> <span class="pre">-i</span></code>. That is the backup file extension, an argument that does not
+exist on GNU systems.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/project_name/project_name/g&#39;</span> <span class="o">{}</span> +
+git add -u
+git commit -nm <span class="s1">&#39;set project name&#39;</span>
+</pre></div>
+</div>
+<p>Change the author name and email in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and the headers of
+all files in the module directory. Commit the changes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/Denes Turei/Your Name/g&#39;</span> <span class="o">{}</span> +
+find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/turei\.denes@gmail\.com/your@email/g&#39;</span> <span class="o">{}</span> +
+git add -u
+git commit -nm <span class="s1">&#39;set author&#39;</span>
+</pre></div>
+</div>
+<p>Change the license if necessary (by default it’s GNU GPL v3). Copy over the
+<code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file with the text of your license and edit the license field in
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. Find a <a class="reference external" href="https://www.gnu.org/licenses/license-list.en.html">list of licenses here</a> and the <a class="reference external" href="https://python-poetry.org/docs/pyproject/#license">notation used by
+Poetry here</a>. Commit
+the changes. E.g. if you want <em>MIT</em> license, copy <a class="reference external" href="https://spdx.org/licenses/MIT.html">this text</a> to the <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file and do the
+changes below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/GPLv3/MIT/g&#39;</span> <span class="o">{}</span> +
+sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/GPL-3\.0-only/MIT/g&#39;</span> pyproject.toml
+git add LICENSE
+git add pyproject.toml
+git commit -nm <span class="s1">&#39;set license to MIT&#39;</span>
+</pre></div>
+</div>
+<p>Initialize <code class="docutils literal notranslate"><span class="pre">poetry</span></code> and <code class="docutils literal notranslate"><span class="pre">tox</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry update
+poetry install
+tox
+git add -u
+git commit -nm <span class="s1">&#39;updated poetry lock&#39;</span>
+</pre></div>
+</div>
+<p>Edit the readme. If you prefer markdown over rST, replace it by a markdown
+file and change the <code class="docutils literal notranslate"><span class="pre">readme</span></code> field under the <code class="docutils literal notranslate"><span class="pre">tool.poetry</span></code> section of
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. Commit the changes.</p>
+<p>Initialize <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>. So far we run all commits with the <code class="docutils literal notranslate"><span class="pre">-n</span></code> switch
+to disable hooks. If you skip this switch at your next commit, pre-commit
+will come into action, install all the tools listed in
+<code class="docutils literal notranslate"><span class="pre">.pre-commit-config.yaml</span></code>, and run them according to the settings.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit install
+</pre></div>
+</div>
+<p>Choose your code formatter. In the config there are three code formatter set
+up but all disabled. These are YAPF, Black and fixit. To enable one of them,
+remove the <code class="docutils literal notranslate"><span class="pre">stages:</span> <span class="pre">[manual]</span></code> from its hook. In this case the code formatter
+will run and change your files upon each commit. If you prefer to run it only
+manually, you can do it by the command below (in this example YAPF):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit run yapf --hook-stage manual
+</pre></div>
+</div>
+<p>Set up your linter. In the <code class="docutils literal notranslate"><span class="pre">tool.flake8</span></code> section of <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>,
+add the codes of general or directory or file specific exceptions. In
+code files for individual cases use the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">noqa:</span></code> tags.</p>
+<p>A Github action is set up to build and publish your documentation on Github.
+Edit <code class="docutils literal notranslate"><span class="pre">docs/src/index.rst</span></code>, the main page of your documentation. You can
+decide to leave the current readme included or write a completely different
+document in <code class="docutils literal notranslate"><span class="pre">docs/src/index.rst</span></code>.</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<p>Once you finished the setup above, you can start developing your project.
+You can read more about the usage of each tool on their webpages. See below
+a handful of the most important tasks:</p>
+<section id="do-a-commit-without-running-pre-commit-hooks">
+<h3>Do a commit without running pre-commit hooks<a class="headerlink" href="#do-a-commit-without-running-pre-commit-hooks" title="Permalink to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">-n</span></code> switch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git commit -nm <span class="s1">&#39;commit message...&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="run-the-tests">
+<h3>Run the tests<a class="headerlink" href="#run-the-tests" title="Permalink to this heading"></a></h3>
+<p>With <code class="docutils literal notranslate"><span class="pre">tox</span></code> you can run the tests in an automatized way, potentially in
+multiple environments. Calling <code class="docutils literal notranslate"><span class="pre">tox</span></code> runs everything that you set up in
+<code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tox
+</pre></div>
+</div>
+<p>To run the tests directly via <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, simply do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry run pytest -v
+</pre></div>
+</div>
+</section>
+<section id="add-a-new-dependency">
+<h3>Add a new dependency<a class="headerlink" href="#add-a-new-dependency" title="Permalink to this heading"></a></h3>
+<p>First add the new third party dependency to the <code class="docutils literal notranslate"><span class="pre">tool.poetry.dependencies</span></code>
+section of <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, by default with the <code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code> version
+specification. Then let Poetry update the lock file and the virtual
+environment. Finally, commit these changes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry update
+poetry install
+git add -u
+git commit -nm <span class="s1">&#39;new dependency: some-package&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="build-the-docs">
+<h3>Build the docs<a class="headerlink" href="#build-the-docs" title="Permalink to this heading"></a></h3>
+<p>The docs are build automatically by the Github action after each push. To
+build them also locally and manually:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry run make html --directory docs/
+</pre></div>
+</div>
+</section>
+<section id="why-should-i-run-everything-by-poetry-run">
+<h3>Why should I run everything by <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span></code>?<a class="headerlink" href="#why-should-i-run-everything-by-poetry-run" title="Permalink to this heading"></a></h3>
+<p>Poetry maintains a virtual environment for your project. By running commands
+with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">...</span></code>, you run them in this virtual environment, where all
+the dependencies are installed, as defined in <code class="docutils literal notranslate"><span class="pre">poetry.lock</span></code>, along with the
+latest version of your project.</p>
+</section>
+</section>
+</section>
+<section id="reference">
+<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading"></a></h1>
+<section id="module-project_name">
+<span id="project-name"></span><h2>project_name<a class="headerlink" href="#module-project_name" title="Permalink to this heading"></a></h2>
+<p>Python project template.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="project_name.twentythree">
+<span class="sig-prename descclassname"><span class="pre">project_name.</span></span><span class="sig-name descname"><span class="pre">twentythree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#project_name.twentythree" title="Permalink to this definition"></a></dt>
+<dd><p>The number twenty-three.</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="indices-tables-and-search">
+<h1>Indices, Tables, and Search<a class="headerlink" href="#indices-tables-and-search" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Saez Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
