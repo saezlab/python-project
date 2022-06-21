@@ -212,6 +212,13 @@ will come into action, install all the tools listed in
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit install
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you addressed errors pointed out by <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>, run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code>
+again. <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> always runs on the staged state, if you don’t
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code> again, you will run it on the previously staged version of
+the files.</p>
+</div>
 </section>
 <section id="choose-your-code-formatter">
 <h3>Choose your code formatter<a class="headerlink" href="#choose-your-code-formatter" title="Permalink to this heading"></a></h3>
@@ -223,6 +230,10 @@ you can do it by the command below (in this example YAPF):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit run yapf --hook-stage manual
 </pre></div>
 </div>
+<p>Do not use two code formatters at the same time: one will do changes on your
+file, the other will do different changes on the same line, and they will do
+it back and forth just useless. Ultimately you will always commit the outcome
+of the last code formatter.</p>
 </section>
 <section id="set-up-your-linter">
 <h3>Set up your linter<a class="headerlink" href="#set-up-your-linter" title="Permalink to this heading"></a></h3>
