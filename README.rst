@@ -90,6 +90,12 @@ all files in the module directory. Commit the changes.
    git add -u
    git commit -nm 'set author'
 
+Edit metadata
+-------------
+
+In the ``pyproject.toml`` file edit the *Description, Repository* and *Bug
+Tracker* fields.
+
 License
 -------
 
