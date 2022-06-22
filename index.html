@@ -54,6 +54,7 @@
 <li><a class="reference internal" href="#set-up-the-tools">Set up the tools</a></li>
 <li><a class="reference internal" href="#choose-your-code-formatter">Choose your code formatter</a></li>
 <li><a class="reference internal" href="#set-up-your-linter">Set up your linter</a></li>
+<li><a class="reference internal" href="#rewrite-the-readme">Rewrite the readme</a></li>
 <li><a class="reference internal" href="#docs-with-sphinx">Docs with Sphinx</a></li>
 </ul>
 </li>
@@ -61,6 +62,7 @@
 <li><a class="reference internal" href="#do-a-commit-without-running-pre-commit-hooks">Do a commit without running pre-commit hooks</a></li>
 <li><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
 <li><a class="reference internal" href="#add-a-new-dependency">Add a new dependency</a></li>
+<li><a class="reference internal" href="#build-the-package">Build the package</a></li>
 <li><a class="reference internal" href="#build-the-docs">Build the docs</a></li>
 <li><a class="reference internal" href="#why-should-i-run-everything-by-poetry-run">Why should I run everything by <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span></code>?</a></li>
 </ul>
@@ -138,7 +140,7 @@ pip install --user tox pre-commit
 <section id="copy-the-template">
 <h3>Copy the template<a class="headerlink" href="#copy-the-template" title="Permalink to this heading"></a></h3>
 <p>Clone the repo in your new project directory, and enter the directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/saezlab/python_project new_project
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/saezlab/python-project new_project
 <span class="nb">cd</span> new_project
 </pre></div>
 </div>
@@ -146,20 +148,22 @@ pip install --user tox pre-commit
 <section id="project-git-repo">
 <h3>Project git repo<a class="headerlink" href="#project-git-repo" title="Permalink to this heading"></a></h3>
 <p>Create a repo for your project and make the cloned repo point to this repo:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote origin set-url git@github.com:saezlab/new_project
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote set-url origin git@github.com:saezlab/new_project
 </pre></div>
 </div>
 </section>
 <section id="rename-it">
 <h3>Rename it<a class="headerlink" href="#rename-it" title="Permalink to this heading"></a></h3>
-<p>Change the placeholder <code class="docutils literal notranslate"><span class="pre">project_name</span></code> used in this template in all files.</p>
+<p>Change the placeholder <code class="docutils literal notranslate"><span class="pre">project_name</span></code> used in this template in all files.
+Also rename the Python module directory.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you are on a non-BSD system (e.g. GNU), remove the first argument for
 <code class="docutils literal notranslate"><span class="pre">sed</span> <span class="pre">-i</span></code>. That is the backup file extension, an argument that does not
 exist on GNU systems.</p>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/project_name/project_name/g&#39;</span> <span class="o">{}</span> +
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f ! -path <span class="s1">&#39;*/.git/*&#39;</span> -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/project_name/new_project/g&#39;</span> <span class="o">{}</span> +
+git mv project_name new_project
 git add -u
 git commit -nm <span class="s1">&#39;set project name&#39;</span>
 </pre></div>
@@ -169,8 +173,8 @@ git commit -nm <span class="s1">&#39;set project name&#39;</span>
 <h3>Add your name<a class="headerlink" href="#add-your-name" title="Permalink to this heading"></a></h3>
 <p>Change the author name and email in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and the headers of
 all files in the module directory. Commit the changes.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/Denes Turei/Your Name/g&#39;</span> <span class="o">{}</span> +
-find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/turei\.denes@gmail\.com/your@email/g&#39;</span> <span class="o">{}</span> +
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f ! -path <span class="s1">&#39;*/.git/*&#39;</span> -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/Denes Turei/Your Name/g&#39;</span> <span class="o">{}</span> +
+find . -depth -type f ! -path <span class="s1">&#39;*/.git/*&#39;</span> -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/turei\.denes@gmail\.com/your@email/g&#39;</span> <span class="o">{}</span> +
 git add -u
 git commit -nm <span class="s1">&#39;set author&#39;</span>
 </pre></div>
@@ -184,7 +188,7 @@ git commit -nm <span class="s1">&#39;set author&#39;</span>
 Poetry here</a>. Commit
 the changes. E.g. if you want <em>MIT</em> license, copy <a class="reference external" href="https://spdx.org/licenses/MIT.html">this text</a> to the <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file and do the
 changes below:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/GPLv3/MIT/g&#39;</span> <span class="o">{}</span> +
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -depth -type f ! -path <span class="s1">&#39;*/.git/*&#39;</span> -exec sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/GPLv3/MIT/g&#39;</span> <span class="o">{}</span> +
 sed -i <span class="s1">&#39;&#39;</span> <span class="s1">&#39;s/GPL-3\.0-only/MIT/g&#39;</span> pyproject.toml
 git add LICENSE
 git add pyproject.toml
@@ -241,6 +245,13 @@ of the last code formatter.</p>
 add the codes of general or directory or file specific exceptions. In
 code files for individual cases use the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">noqa:</span></code> tags.</p>
 </section>
+<section id="rewrite-the-readme">
+<h3>Rewrite the readme<a class="headerlink" href="#rewrite-the-readme" title="Permalink to this heading"></a></h3>
+<p>Since you cloned the template repo, the <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> has exactly the
+contents that you’re reading right now. Delete this whole content, add a
+new main title, and add some contents about your new project, at least a
+one sentence rationale.</p>
+</section>
 <section id="docs-with-sphinx">
 <h3>Docs with Sphinx<a class="headerlink" href="#docs-with-sphinx" title="Permalink to this heading"></a></h3>
 <p>A Github action is set up to build and publish your documentation on Github.
@@ -284,6 +295,20 @@ environment. Finally, commit these changes.</p>
 poetry install
 git add -u
 git commit -nm <span class="s1">&#39;new dependency: some-package&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="build-the-package">
+<h3>Build the package<a class="headerlink" href="#build-the-package" title="Permalink to this heading"></a></h3>
+<p>Poetry builds the package for you, by default it creates and <code class="docutils literal notranslate"><span class="pre">sdist</span></code> and
+a <code class="docutils literal notranslate"><span class="pre">whl</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry build
+</pre></div>
+</div>
+<p>Poetry is also happy to publish your package on PyPI. You can get a PyPI API
+token, configure Poetry to use it, and push your pacakge updates to PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry config pypi-token.pypi my-token
+poetry publish
 </pre></div>
 </div>
 </section>
