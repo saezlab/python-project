@@ -56,12 +56,13 @@ Create a repo for your project and make the cloned repo point to this repo:
 
 .. code:: bash
 
-   git remote origin set-url git@github.com:saezlab/new_project
+   git remote set-url origin git@github.com:saezlab/new_project
 
 Rename it
 ---------
 
 Change the placeholder ``project_name`` used in this template in all files.
+Also rename the Python module directory.
 
 .. note::
 
@@ -71,7 +72,8 @@ Change the placeholder ``project_name`` used in this template in all files.
 
 .. code:: bash
 
-   find . -depth -type f -exec sed -i '' 's/project_name/project_name/g' {} +
+   find . -depth -type f ! -path '*/.git/*' -exec sed -i '' 's/project_name/new_project/g' {} +
+   git mv project_name new_project
    git add -u
    git commit -nm 'set project name'
 
@@ -83,8 +85,8 @@ all files in the module directory. Commit the changes.
 
 .. code:: bash
 
-   find . -depth -type f -exec sed -i '' 's/Denes Turei/Your Name/g' {} +
-   find . -depth -type f -exec sed -i '' 's/turei\.denes@gmail\.com/your@email/g' {} +
+   find . -depth -type f ! -path '*/.git/*' -exec sed -i '' 's/Denes Turei/Your Name/g' {} +
+   find . -depth -type f ! -path '*/.git/*' -exec sed -i '' 's/turei\.denes@gmail\.com/your@email/g' {} +
    git add -u
    git commit -nm 'set author'
 
@@ -102,7 +104,7 @@ changes below:
 
 .. code:: bash
 
-   find . -depth -type f -exec sed -i '' 's/GPLv3/MIT/g' {} +
+   find . -depth -type f ! -path '*/.git/*' -exec sed -i '' 's/GPLv3/MIT/g' {} +
    sed -i '' 's/GPL-3\.0-only/MIT/g' pyproject.toml
    git add LICENSE
    git add pyproject.toml
