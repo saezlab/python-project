@@ -168,6 +168,14 @@ In the ``tool.flake8`` section of ``pyproject.toml``,
 add the codes of general or directory or file specific exceptions. In
 code files for individual cases use the ``# noqa:`` tags.
 
+Rewrite the readme
+------------------
+
+Since you cloned the template repo, the ``README.rst`` has exactly the
+contents that you're reading right now. Delete this whole content, add a
+new main title, and add some contents about your new project, at least a
+one sentence rationale.
+
 Docs with Sphinx
 ----------------
 
