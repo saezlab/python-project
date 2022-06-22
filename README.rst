@@ -232,6 +232,24 @@ environment. Finally, commit these changes.
    git add -u
    git commit -nm 'new dependency: some-package'
 
+Build the package
+-----------------
+
+Poetry builds the package for you, by default it creates and ``sdist`` and
+a ``whl``:
+
+.. code:: bash
+
+   poetry build
+
+Poetry is also happy to publish your package on PyPI. You can get a PyPI API
+token, configure Poetry to use it, and push your pacakge updates to PyPI:
+
+.. code:: bash
+
+   poetry config pypi-token.pypi my-token
+   poetry publish
+
 Build the docs
 --------------
 
