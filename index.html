@@ -29,7 +29,7 @@
             <a href="#" class="icon icon-home"> project_name
           </a>
               <div class="version">
-                0.0.1
+                0.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -229,6 +229,13 @@ again. <code class="docutils literal notranslate"><span class="pre">pre-commit</
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code> again, you will run it on the previously staged version of
 the files.</p>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you staged not all modified tracked files in your commit, <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>
+will stash the unstaged ones. This is to run the checks on the contents
+as it will be committed. In such cases do not interrupt the run of
+<code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> as then the unstaged changes remain stashed.</p>
+</div>
 </section>
 <section id="choose-your-code-formatter">
 <h3>Choose your code formatter<a class="headerlink" href="#choose-your-code-formatter" title="Permalink to this heading"></a></h3>
@@ -331,7 +338,13 @@ build them also locally and manually:</p>
 <p>Poetry maintains a virtual environment for your project. By running commands
 with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">...</span></code>, you run them in this virtual environment, where all
 the dependencies are installed, as defined in <code class="docutils literal notranslate"><span class="pre">poetry.lock</span></code>, along with the
-latest version of your project.</p>
+latest version of your project. It means you can run Python in the virtual
+environment of your project, this way all the dependencies will be imported
+from this environment, so their versions meet all the criteria defined by
+you.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry run python
+</pre></div>
+</div>
 </section>
 </section>
 </section>
