@@ -149,6 +149,13 @@ will come into action, install all the tools listed in
    ``git add`` again, you will run it on the previously staged version of
    the files.
 
+.. warning::
+
+   If you staged not all modified tracked files in your commit, ``pre-commit``
+   will stash the unstaged ones. This is to run the checks on the contents
+   as it will be committed. In such cases do not interrupt the run of
+   ``pre-commit`` as then the unstaged changes remain stashed.
+
 Choose your code formatter
 --------------------------
 
@@ -272,4 +279,11 @@ Why should I run everything by ``poetry run``?
 Poetry maintains a virtual environment for your project. By running commands
 with ``poetry run ...``, you run them in this virtual environment, where all
 the dependencies are installed, as defined in ``poetry.lock``, along with the
-latest version of your project.
+latest version of your project. It means you can run Python in the virtual
+environment of your project, this way all the dependencies will be imported
+from this environment, so their versions meet all the criteria defined by
+you.
+
+.. code:: bash
+
+   poetry run python
