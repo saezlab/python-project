@@ -2,6 +2,11 @@
 Python project template
 #######################
 
+.. note::
+
+   This document is better readable in `its Sphinx rendered version
+   <https://saezlab.github.io/python-project/>`_.
+
 Create your new Python project by forking this repo. This way you start with
 a number of helpful development tools set up for you. These tools are:
 
