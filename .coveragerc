@@ -1,12 +1,12 @@
 [paths]
 source =
-    cachemanager
-    */site-packages/cachemanager
+    project_name
+    */site-packages/project_name
 
 [run]
 branch = true
 parallel = true
-source = cachemanager
+source = project_name
 omit = */__init__.py
 
 [report]
