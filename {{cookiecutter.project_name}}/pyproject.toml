@@ -86,7 +86,7 @@ indent = "    "
 skip = []
 
 [tool.flake8]
-ignore = ["D200", "D202", "D401", "D105", "W504", "E731"]
+ignore = ["D200", "D202", "D401", "D105", "W503", "W504", "E731"]
 per-file-ignores = [
     "docs/src/conf.py:D100",
     "tests/*:D100,D101,D102",
