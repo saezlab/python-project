@@ -27,6 +27,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics"
 ]
 repository = "{{ cookiecutter.project_repo }}"
+homepage = "{{ cookiecutter.project_repo }}"
+documentation = "https://{{ cookiecutter.project_name }}.readthedocs.io/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
