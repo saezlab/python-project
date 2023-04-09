@@ -104,7 +104,19 @@ html_theme_options = {
     'navigation_depth': 2,
     'collapse_navigation': True,
 }
-
+html_context = {
+    'display_github': True,  # Integrate GitHub
+    'display_github': True,  # Integrate GitHub
+    'github_user': '{{cookiecutter.github_organization}}',  # Username
+    'github_user': '{{cookiecutter.github_organization}}',  # Username
+    'github_repo': project,  # Repo name
+    'github_repo': project,  # Repo name
+    'github_version': 'master',  # Version
+    'github_version': 'main',  # Version
+    'conf_py_path': '/docs/',  # Path in the checkout to the docs root
+    'conf_py_path': '/docs/',  # Path in the checkout to the docs root
+}
+}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
