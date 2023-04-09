@@ -26,6 +26,7 @@ version = {{ cookiecutter.package_name }}.__version__
 author = ', '.join({{ cookiecutter.package_name }}.__author__)
 years = '-'.join(sorted({'2022', f'{datetime.now():%Y}'}))
 copyright = f'{years}, Saez Lab'
+repository_url = 'https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_name }}'
 
 # -- General configuration ---------------------------------------------------
 
