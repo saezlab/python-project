@@ -3,15 +3,18 @@ requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "project_name"
+name = "{{ cookiecutter.package_name  }}"
 version = "0.1.0"
-description = "Project description"
-license = "GPL-3.0-only"
+description = "{{ cookiecutter.project_description }}"
+license = "{{ cookiecutter.license  }}"
 authors = [
-    "Denes Turei <turei.denes@gmail.com>"
+  {name = "{{ cookiecutter.author_full_name }}"},
+]
+maintainers = [
+  {name = "{{ cookiecutter.author_full_name }}", email = "{{ cookiecutter.author_email }}"},
 ]
 packages = [
-    { include = "project_name" }
+    { include = "{{ cookiecutter.package_name }}" }
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -23,11 +26,11 @@ classifiers = [
     "Natural Language :: English",
     "Topic :: Scientific/Engineering :: Bio-Informatics"
 ]
-repository = "https://github.com/saezlab/python-project"
-readme = "README.rst"
+repository = "{{ cookiecutter.project_repo }}"
+readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8"
 toml = "*"
 
 [tool.poetry.dev-dependencies]
@@ -108,3 +111,14 @@ ignore_directives = [
 ]
 ignore_roles = ["ref"]
 ignore_messages = '(Unknown target name:.*|No (directive|role) entry for "(auto)?(class|method|property|function|func|mod|attr)" in module "docutils\.parsers\.rst\.languages\.en"\.)'
+
+[tool.coverage.run]
+source = ["{{ cookiecutter.package_name }}"]
+omit = [
+	"**/test_*.py",
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "tests",
+]

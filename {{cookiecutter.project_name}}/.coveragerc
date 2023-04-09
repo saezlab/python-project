@@ -1,12 +1,12 @@
 [paths]
 source =
     project_name
-    */site-packages/project_name
+    */site-packages/{{ cookiecutter.project_name }}
 
 [run]
 branch = true
 parallel = true
-source = project_name
+source = {{ cookiecutter.project_name }}
 omit = */__init__.py
 
 [report]
