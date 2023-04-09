@@ -83,7 +83,7 @@ length_sort = "1"
 indent = "    "
 
 [tool.flake8]
-ignore = ["D200", "D202", "D401", "D105", "W504"]
+ignore = ["D200", "D202", "D401", "D105", "W504", "E731"]
 per-file-ignores = [
     "docs/src/conf.py:D100",
     "tests/*:D100,D101,D102",
@@ -91,6 +91,13 @@ per-file-ignores = [
 ]
 max-line-length = 80
 count = true
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "docs/_build",
+    "dist"
+]
 
 [tool.yapf]
 based_on_style = "facebook"
