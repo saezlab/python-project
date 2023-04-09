@@ -51,10 +51,13 @@ repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
+    -   id: detect-private-key
+    -   id: check-ast
     -   id: check-docstring-first
     -   id: end-of-file-fixer
     -   id: check-added-large-files
     -   id: mixed-line-ending
+        args: [--fix=lf]
     -   id: trailing-whitespace
         exclude: ^.bumpversion.cfg$
     -   id: check-merge-conflict
@@ -84,7 +87,7 @@ repos:
     rev: v3.3.1
     hooks:
     -   id: pyupgrade
-        args: [--py3-plus, --py36-plus]
+        args: [--py3-plus, --py38-plus, --keep-runtime-typing]
 -   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
     rev: v2.8.0
     hooks:
