@@ -1,11 +1,12 @@
 {
-    "project_name": "project-name",
-    "package_name": "{{ cookiecutter.project_name|lower|replace('-', '_') }}",
+    "project_name": "Project Name",
+    "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}"
+    "package_name": "{{ cookiecutter.project_slug|lower|replace('-', '_') }}",
     "project_description": "A great new project",
-    "author_full_name": "Denes Turei",
-    "author_email": "turei.denes@gmail.com",
+    "author_full_name": "Your Name",
+    "author_email": "your@email",
     "github_organization": "saezlab",
-    "project_repo": "https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_name }}",
+    "project_repo": "https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}",
     "license": [
         "MIT License",
         "BSD 2-Clause License",
@@ -15,6 +16,10 @@
         "ISC License",
         "Unlicense"
     ],
+    "license_shorthand": "{{ license_mapping[cookiecutter.license] }}",
+    "copyright_holder": "Heidelberg University Hospital",
+    "__year": "{% now 'utc', '%Y' %}",
+    "_extensions": ["jinja2_time.TimeExtension"],
     "_copy_without_render": [
         ".github/workflows/**.yaml"
     ]
