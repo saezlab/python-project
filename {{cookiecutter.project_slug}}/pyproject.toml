@@ -25,7 +25,7 @@ classifiers = [
 ]
 repository = "{{ cookiecutter.project_repo }}"
 homepage = "{{ cookiecutter.project_repo }}"
-documentation = "https://{{ cookiecutter.project_name }}.readthedocs.io/"
+documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -50,7 +50,7 @@ jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contr
 nbsphinx = { git = "https://github.com/deeenes/nbsphinx.git", branch = "timings" }
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/saezlab/python-project/issues"
+"Bug Tracker" = "https://github.com/{{ cookiecutter.project_repo }}/issues"
 
 [tool.black]
 line-length = 80
