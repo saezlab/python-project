@@ -44,7 +44,7 @@
 #
 
 """
-Brief description of the project/module
+Brief description of the project/module.
 """
 
 __all__ = [
