@@ -3,15 +3,12 @@ requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "{{ cookiecutter.project_name }}"
+name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.project_description }}"
 license = "{{ cookiecutter.license }}"
 authors = [
-  {name = "{{ cookiecutter.author_full_name }}"},
-]
-maintainers = [
-  {name = "{{ cookiecutter.author_full_name }}", email = "{{ cookiecutter.author_email }}"},
+    "{{ cookiecutter.author_full_name }} <{{ cookiecutter.author_email }}>"
 ]
 packages = [
     { include = "{{ cookiecutter.package_name }}" }
