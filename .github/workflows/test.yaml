@@ -22,7 +22,6 @@ jobs:
                 project_name: [project_name, alt_name]
         env:
             PROJECT_ROOT: ${{ matrix.project_name }}
-            MODULE_NAME: ${{ matrix.project_name|lower|replace('-', '_') }}
 
         steps:
         -   uses: actions/checkout@v2
@@ -57,7 +56,7 @@ jobs:
             run: |
                 cd "$PROJECT_ROOT"
                 pip install '.[doc]'
-                python -c 'import ${{ env.MODULE_NAME }}'
+                python -c 'import ${{ env.PROJECT_ROOT }}'
         -   name: Build the documentation
             env:
                 SPHINXOPTS: -W --keep-going
