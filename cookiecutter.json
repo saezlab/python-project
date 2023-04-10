@@ -11,7 +11,9 @@
         "BSD 2-Clause License",
         "BSD 3-Clause License",
         "Apache License Version 2.0",
-        "GNU General Public License Version 3"
+        "GNU General Public License Version 3",
+        "ISC License",
+        "Unlicense"
     ],
     "_copy_without_render": [
         ".github/workflows/**.yaml"
