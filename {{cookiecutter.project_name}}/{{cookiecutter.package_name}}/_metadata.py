@@ -6,7 +6,7 @@
 # Copyright 2023
 # Heidelberg University Hospital
 #
-# File author(s): {{ cookiecutter.author }} ({{ cookiecutter.author_email }})
+# File author(s): {{ cookiecutter.author_full_name }} ({{ cookiecutter.author_email }})
 #
 # Distributed under {{ cookiecutter.license }} license
 # See the file `LICENSE` or read a copy at
