@@ -10,8 +10,7 @@
 #
 # Distributed under the {{ cookiecutter._licenses_short[cookiecutter.license] }} license
 # See the file `LICENSE` or read a copy at
-
-{%- if cookiecutter.license == 'GNU General Public License Version 3' -%}
+{{ '' }}{%- if cookiecutter.license == 'GNU General Public License Version 3' -%}
 
 # https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -39,8 +38,7 @@
 
 # https://unlicense.org/
 
-{%- endif -%}
-
+{%- endif -%}{{ '' }}
 #
 
 """
