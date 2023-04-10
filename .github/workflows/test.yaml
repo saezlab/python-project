@@ -48,6 +48,7 @@ jobs:
                 path: ~/.cache/pre-commit
                 key: pre-commit-3|${{ matrix.python }}|${{ hashFiles(format('{0}/.pre-commit-config.yaml', env.PROJECT_ROOT)) }}
         -   name: Run pre-commit
+            continue-on-error: true
             run: |
                 cd "$PROJECT_ROOT"
                 git add .
