@@ -69,6 +69,17 @@ jobs:
                 cd "$PROJECT_ROOT"
                 git add .
                 pre-commit run --color=always --show-diff-on-failure --all-files
+        -   name: Load cached `poetry.lock`
+            id: poetry-lock-cache
+            uses: actions/cache@v3
+            with:
+                path: $PROJECT_ROOT/poetry.lock
+                key: ${{ hashFiles('$PROJECT_ROOT/pyproject.toml') }}
+        -   name: Update `poetry.lock`
+            if: steps.poetry-lock-cache.outputs.cache-hit != 'true'
+            run: |
+                cd "$PROJECT_ROOT"
+                poetry update
         -   name: Load cached Poetry venv
             id: cached-poetry-dependencies
             uses: actions/cache@v3
