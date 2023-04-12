@@ -49,7 +49,6 @@ jobs:
                 virtualenvs-create: true
                 virtualenvs-in-project: true
                 installer-parallel: true
-                installer.modern-installation: false
         -   name: Poetry config
             run: poetry config installer.modern-installation false
         -   name: Instantiate the template
