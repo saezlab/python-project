@@ -45,7 +45,7 @@ sphinxcontrib-fulltoc = ">=1.2.0"
 sphinx_copybutton = "*"
 jupyterlab = "*"
 pydata-sphinx-theme = "*"
-sphinx_remove_toctrees = "*"
+sphinx-remove-toctrees = "*"
 jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contrib_nbextensions.git", branch = "master" }
 nbsphinx = { git = "https://github.com/deeenes/nbsphinx.git", branch = "timings" }
 
