@@ -29,7 +29,7 @@ documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = "^{{ cookiecutter.python_version }}"
 toml = "*"
 
 [tool.poetry.dev-dependencies]
