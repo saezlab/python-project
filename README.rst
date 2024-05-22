@@ -29,6 +29,49 @@ page in `this spreadsheet <https://docs.google.com/spreadsheets/d\
 Setup
 =====
 
+This template uses `Cookiecutter <https://cookiecutter.readthedocs.io/en/\
+stable/>`, a tool to create projects from templates. To create a project, first
+clone this repo:
+
+.. code:: bash
+
+   git clone https://github.com/saezlab/python-project
+
+Then edit the ``cookiecutter.json`` to enter your project's metadata:
+
+.. code:: bash
+
+   $EDITOR python-project/cookiecutter.json
+
+Finally, use ``cookiecutter`` to create your project:
+
+.. code:: bash
+
+   cookiecutter python-project
+
+Your project will be created in a new directory, its name will depend on the
+title of the project.
+
+Alternatively, a single command, interactive way of creating projects is
+available:
+
+.. code:: bash
+
+   cookiecutter gh:saezlab/python-project
+
+Then you'll be asked interactively for the metadata, and the final outcome will
+be the same as with the previous method.
+
+Manual setup
+============
+
+Below you can read the original instructions about how to set up a project
+manually from this template. This work can be done in a second with
+``cookiecutter``, as presented above. We still keep the guide below because it
+shows many important details about the tools included in the template. Also,
+``poetry`` and ``tox`` you have to install unless these are already available
+on your machine.
+
 Project name
 ------------
 
