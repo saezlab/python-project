@@ -42,7 +42,7 @@
 #
 
 """
-Brief description of the project/module.
+{{ cookiecutter.short_description }}
 """
 
 __all__ = [
