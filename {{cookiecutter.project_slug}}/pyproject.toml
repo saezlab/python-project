@@ -53,7 +53,7 @@ jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contr
 nbsphinx = { git = "https://github.com/deeenes/nbsphinx.git", branch = "timings" }
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/{{ cookiecutter.project_repo }}/issues"
+"Bug Tracker" = "{{ cookiecutter.project_repo }}/issues"
 
 [tool.black]
 line-length = 80
