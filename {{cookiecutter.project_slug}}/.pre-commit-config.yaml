@@ -4,9 +4,9 @@ fail_fast: false
 default_language_version:
     python: python3
 default_stages:
--   commit
--   push
-minimum_pre_commit_version: 2.7.1
+-   pre-commit
+-   pre-push
+minimum_pre_commit_version: 3.0.0
 repos:
 -   repo: https://github.com/deeenes/unexport
     rev: 0.4.0-patch0-8
@@ -15,13 +15,13 @@ repos:
         args: [--refactor, --single_quotes]
         exclude: __init__.py$
 -   repo: https://github.com/google/yapf
-    rev: v0.32.0
+    rev: v0.43.0
     hooks:
     -   id: yapf
         additional_dependencies: [toml]
         stages: [manual]
 -   repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 25.1.0
     hooks:
     -   id: black
         additional_dependencies: [toml]
@@ -31,27 +31,31 @@ repos:
     hooks:
     -   id: fixit-run-rules
         stages: [manual]
--   repo: https://github.com/timothycrosley/isort
-    rev: 5.12.0
+-   repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
     hooks:
     -   id: isort
         additional_dependencies: [toml]
+# This is supposed to be replaced by pyupgrade:
 -   repo: https://github.com/snok/pep585-upgrade
     rev: v1.0.1
     hooks:
     -   id: upgrade-type-hints
         args: [--futures=true]
 -   repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.4.0
+    rev: v3.1.0
     hooks:
     -   id: add-trailing-comma
+# This is very old, it maybe even fails;
+# And maybe pre-commit/double-quote-string-fixer replaces it
 -   repo: https://github.com/myint/unify
     rev: v0.5
     hooks:
     -   id: unify
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
+    -   id: double-quote-string-fixer
     -   id: detect-private-key
     -   id: check-ast
     -   id: check-docstring-first
@@ -81,23 +85,25 @@ repos:
         -   flake8-bugbear
         -   git+https://github.com/saezlab/flake8-kwargs-spaces.git
 -   repo: https://github.com/rstcheck/rstcheck
-    rev: v6.1.2
+    rev: v6.2.4
     hooks:
     -   id: rstcheck
         exclude: docs
 -   repo: https://github.com/asottile/blacken-docs
-    rev: 1.13.0
+    rev: 1.19.1
     hooks:
     -   id: blacken-docs
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.19.1
     hooks:
     -   id: pyupgrade
         args: [--py3-plus, --py38-plus, --keep-runtime-typing]
 -   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.8.0
+    rev: v2.14.0
     hooks:
     -   id: pretty-format-yaml
+        args: [--autofix, --indent, '4']
+    -   id: pretty-format-toml
         args: [--autofix, --indent, '4']
 -   repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
