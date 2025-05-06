@@ -1,8 +1,8 @@
 [build-system]
-requires = ["poetry_core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
+[project]
 name = "{{ cookiecutter.project_slug }}"
 version = "0.0.1"
 description = "{{ cookiecutter.project_description }}"
@@ -23,38 +23,47 @@ classifiers = [
     "Natural Language :: English",
     "Topic :: Scientific/Engineering :: Bio-Informatics"
 ]
-repository = "{{ cookiecutter.project_repo }}"
-homepage = "{{ cookiecutter.project_repo }}"
-documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
 readme = "README.md"
+requires-python = ">={{ cookiecutter.python_version }}"
+dependencies = [
+    toml = "*"
+]
 
-[tool.poetry.dependencies]
-python = "^{{ cookiecutter.python_version }}"
-toml = "*"
+[project.optional-dependencies]
 
-[tool.poetry.dev-dependencies]
-pytest = ">=6.0"
-tox = ">=3.20.1"
-pre-commit = ">=2.17.0"
-bump2version = "*"
-coverage = ">=6.0"
-distlib = "*"
-sphinx = ">=5.0.0"
-sphinx-last-updated-by-git = ">=0.3"
-sphinx-autodoc-typehints = ">=1.18.0"
-sphinxcontrib-fulltoc = ">=1.2.0"
-sphinxcontrib-bibtex = "*"
-sphinx-copybutton = "*"
-myst-parser = "*"
-myst-nb = "*"
-jupyterlab = "*"
-pydata-sphinx-theme = "*"
-sphinx-remove-toctrees = "*"
-jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contrib_nbextensions.git", branch = "master" }
-nbsphinx = { git = "https://github.com/deeenes/nbsphinx.git", branch = "timings" }
+[dependency-groups]
+dev = [
+    distlib = "*"
+    pre-commit = ">=2.17.0"
+    bump2version = "*"
+]
+tests = [
+    pytest = ">=6.0"
+    tox = ">=3.20.1"
+    coverage = ">=6.0"
 
-[tool.poetry.urls]
-"Bug Tracker" = "{{ cookiecutter.project_repo }}/issues"
+]
+docs = [
+    sphinx = ">=5.0.0"
+    sphinx-last-updated-by-git = ">=0.3"
+    sphinx-autodoc-typehints = ">=1.18.0"
+    sphinxcontrib-fulltoc = ">=1.2.0"
+    sphinxcontrib-bibtex = "*"
+    sphinx-copybutton = "*"
+    myst-parser = "*"
+    myst-nb = "*"
+    jupyterlab = "*"
+    pydata-sphinx-theme = "*"
+    sphinx-remove-toctrees = "*"
+    jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contrib_nbextensions.git", branch = "master" }
+    nbsphinx = { git = "https://github.com/deeenes/nbsphinx.git", branch = "timings" }
+]
+
+[project.urls]
+Homepage = "{{ cookiecutter.project_repo }}"
+Repository = "{{ cookiecutter.project_repo }}"
+Issues = "{{ cookiecutter.project_repo }}/issues"
+Documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
 
 [tool.black]
 line-length = 80
