@@ -75,11 +75,12 @@ repos:
     -   id: fix-encoding-pragma
         args: [--remove] # for Python3 codebase, it's not necessary
     -   id: requirements-txt-fixer
--   repo: https://github.com/john-hen/Flake8-pyproject
-    rev: 1.2.3
+-   repo: https://github.com/PyCQA/flake8
+    rev: 7.2.0
     hooks:
-    -   id: Flake8-pyproject
+    -   id: flake8
         additional_dependencies:
+        -   Flake8-pyproject
         -   flake8-docstrings
         -   flake8-comprehensions
         -   flake8-bugbear
