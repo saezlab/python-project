@@ -10,7 +10,7 @@ packages = [ "{{ cookiecutter.package_name }}" ]
 [project]
 name = "{{ cookiecutter.project_slug }}"
 version = "0.0.1"
-description = "{{ cookiecutter.project_description }}"
+description = "{{ cookiecutter.short_description }}"
 license = "{{ cookiecutter.license }}"
 maintainers = [
     "{{ cookiecutter.author_full_name }} <{{ cookiecutter.author_email }}>"
