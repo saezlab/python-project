@@ -52,6 +52,7 @@ tests = [
     "coverage>=6.0",
     "codecov-cli>=10.2.0",
     "diff_cover",
+    "ruff",
 ]
 docs = [
     "sphinx>=5.0.0",
@@ -79,64 +80,91 @@ Repository = "{{ cookiecutter.project_repo }}"
 Issues = "{{ cookiecutter.project_repo }}/issues"
 Documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
 
-[tool.black]
+[tool.ruff]
 line-length = 80
-target-version = ['py31*']
-include = '\.pyi?$'
-exclude = '''
-(
-  /(
-      \.eggs
-    | \.git
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-)
-'''
+target-version = py312
+unfixable = [ "UP" ]
+extend-include = [ "*.ipynb" ]
+format = true
+format.docstring-code-format = true
+format.trailing-comma = "all"
+lint.isort.known-first-party =
+lint.select = [
+    "B",      # flake8-bugbear
+    "BLE",    # flake8-blind-except
+    "C4",     # flake8-comprehensions
+    "D",      # pydocstyle
+    "E",      # Error detected by Pycodestyle
+    "F",      # Errors detected by Pyflakes
+    "I",      # isort
+    "RUF100", # Report unused noqa directives
+    "TID",    # flake8-tidy-imports
+    "UP",     # pyupgrade
+    "W",      # Warning detected by Pycodestyle
+    "Q",      # Consistent quotes
+    "S307",   # eval() detection
+    "ANN",    # flake8-annotations
+]
+lint.ignore = [
+    "B008", # Errors from function calls in argument defaults. These are fine when the result is immutable.
+    "B024",
+    "D100", # Missing docstring in public module
+    "D104", # Missing docstring in public package
+    "D105", # __magic__ methods are often self-explanatory, allow missing docstrings
+    "D107", # Missing docstring in __init__
+    # Disable one in each pair of mutually incompatible rules
+    "D200",
+    "D202",
+    "D203", # We don’t want a blank line before a class docstring
+    "D213", # <> We want docstrings to start immediately after the opening triple quote
+    "D400", # first line should end with a period [Bug: doesn’t work with single-line docstrings]
+    "D401", # First line should be in imperative mood; try rephrasing
+    "E131",
+    "E251",
+    "E303",
+    "E501", # line too long -> we accept long comment lines; formatter gets rid of long code lines
+    "E521",
+    "E731", # Do not assign a lambda expression, use a def -> lambda expression assignments are convenient
+    "E741", # allow I, O, l as variable names -> I is the identity matrix
+    "W503",
+    "W504",
+]
+lint.pydocstyle.convention = "numpy"
+lint.quotes.inline-quotes = "single"
 
-[tool.isort]
-from_first = true
-line_length = 80
-multi_line_output = 3
-include_trailing_comma = true
-use_parentheses = true
-known_num="numpy,pandas"
-sections = "FUTURE,STDLIB,THIRDPARTY,NUM,FIRSTPARTY,LOCALFOLDER"
-no_lines_before="LOCALFOLDER"
-balanced_wrapping = true
-force_grid_wrap = 0
-length_sort = "1"
+[tool.ruff.lint.per-file-ignores]
+"docs/*" = [ "I" ]
+"docs/src/conf.py" = [ "D100" ]
+"tests/*" = [ "D" ]
+"tests/conftest.py" = [ "D101", "D102", "D103", "E402" ]
+"*/__init__.py" = [ "D104", "F401" ]
+
+[tool.ruff.lint.isort]
+known-first-party = [ "{{ cookiecutter.package_name }}" ]
+known-third-party = [ "numpy", "pandas" ]
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "NUM",
+    "FIRSTPARTY",
+    "LOCALFOLDER",
+]
+no-lines-before = [ "LOCALFOLDER" ]
+lines-after-imports = 1
+combine-as-imports = true
+force-sort-within-sections = true
+case-sensitive = false
+order-by-type = true
+length-sort = true
+force-wrap-aliases = true
+use-parentheses = true
 indent = "    "
-skip = []
-
-[tool.flake8]
-extend-select = ["CE101"]
-ignore = [
-  "D200", "D202", "D401", "D105",
-  "W503", "W504",
-  "E731", "E131", "E251", "E303",
-  "B024"
-]
-per-file-ignores = [
-    "docs/src/conf.py:D100",
-    "tests/*:D100,D101,D102,D103,D104,D105",
-    "tests/conftest.py:D101,D102,D103,E402",
-    "*/__init__.py:D104,F401"
-]
-max-line-length = 80
-count = true
+balanced-wrapping = true
+include-trailing-comma = true
+multi-line-output = 3
 exclude = [
-    ".git",
-    "__pycache__",
-    "build",
     "docs/_build",
-    "dist"
 ]
 
 [tool.rstcheck]
