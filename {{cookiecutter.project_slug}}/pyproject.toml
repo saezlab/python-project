@@ -284,3 +284,15 @@ commands = [
     "uv build --wheel --out-dir {envtmpdir}/build",
     "twine check {envtmpdir}/build/*",
 ]
+
+[tool.cruft]
+skip = [
+  "tests",
+  "{{ cookiecutter.package_name }}/__init__.py",
+  "{{ cookiecutter.package_name }}/_metadata.py",
+  "docs/api.md",
+  "docs/changelog.md",
+  "docs/references.bib",
+  "docs/references.md",
+  "docs/notebooks/example.ipynb",
+]
