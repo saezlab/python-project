@@ -8,4 +8,4 @@
 [badge-docs]: https://img.shields.io/readthedocs/{{ cookiecutter.project_slug }}
 [link-docs]: https://{{ cookiecutter.project_slug }}.readthedocs.io
 
-{{ cookiecutter.project_description }}
+{{ cookiecutter.readme }}
