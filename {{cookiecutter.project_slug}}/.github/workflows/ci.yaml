@@ -2,10 +2,10 @@ name: Test
 
 on:
     schedule:
-    -   cron: '0 3 * * *'
+    -   cron: 0 3 * * *
     push:
         branches: [main]
-        tags: ['v*']
+        tags: [v*]
     pull_request:
         branches: [main]
 
