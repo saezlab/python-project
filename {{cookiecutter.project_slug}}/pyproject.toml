@@ -11,7 +11,7 @@ packages = [ "{{ cookiecutter.package_name }}" ]
 name = "{{ cookiecutter.project_slug }}"
 version = "0.0.1"
 description = "{{ cookiecutter.short_description }}"
-license = "{{ cookiecutter.license_spdx }}"
+license = "{{ cookiecutter._license_spdx }}"
 maintainers = [
     "{{ cookiecutter.author_full_name }} <{{ cookiecutter.author_email }}>"
 ]
@@ -25,7 +25,7 @@ classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: {{ cookiecutter.license_classifier }}",
+    "License :: OSI Approved :: {{ cookiecutter._license_classifier }}",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering :: Bio-Informatics"
