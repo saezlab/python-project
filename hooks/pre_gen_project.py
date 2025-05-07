@@ -20,5 +20,5 @@ LICENSE_SPDX = {
 }
 
 license = '{{ cookiecutter.license }}'
-_ = '{{ cookiecutter.update({"license_classifier": LICENSE_CLASSIFIERS.get(license, license)}) }}'
-_ = '{{ cookiecutter.update({"license_spdx": LICENSE_SPDX.get(license, license)}) }}'
+# _ = '{{ cookiecutter.update({"license_classifier": LICENSE_CLASSIFIERS.get(license, license)}) }}'
+# _ = '{{ cookiecutter.update({"license_spdx": LICENSE_SPDX.get(license, license)}) }}'
