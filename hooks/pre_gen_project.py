@@ -19,6 +19,6 @@ LICENSE_SPDX = {
     'Unlicense': 'Unlicense',
 }
 
-license = cookiecutter.license
-cookiecutter.license_classifier = LICENSE_CLASSIFIERS.get(license, license)
-cookiecutter.license_spdx = LICENSE_SPDX.get(license, license)
+license = '{{ cookiecutter.license }}'
+_ = '{{ cookiecutter.license_classifier = LICENSE_CLASSIFIERS.get(license, license) }}'
+_ = '{{ cookiecutter.license_spdx = LICENSE_SPDX.get(license, license) }}'
