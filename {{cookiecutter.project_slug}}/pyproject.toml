@@ -82,7 +82,7 @@ Documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
 
 [tool.ruff]
 line-length = 80
-target-version = py312
+target-version = "py312"
 unfixable = [ "UP" ]
 extend-include = [ "*.ipynb" ]
 format = true
