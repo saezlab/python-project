@@ -85,9 +85,9 @@ line-length = 80
 target-version = "py312"
 unfixable = [ "UP" ]
 extend-include = [ "*.ipynb" ]
-format = true
 format.docstring-code-format = true
 format.trailing-comma = "all"
+format.quote-style = "single"
 lint.isort.known-first-party =
 lint.select = [
     "B",      # flake8-bugbear
