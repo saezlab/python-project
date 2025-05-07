@@ -88,7 +88,6 @@ extend-include = [ "*.ipynb" ]
 format.docstring-code-format = true
 format.trailing-comma = "all"
 format.quote-style = "single"
-lint.isort.known-first-party =
 lint.select = [
     "B",      # flake8-bugbear
     "BLE",    # flake8-blind-except
@@ -197,7 +196,7 @@ filterwarnings = [
 ]
 
 [tool.tox]
-min_version = 3.20.0
+min_version = "3.20.0"
 isolated_build = true
 skip_missing_interpreters = true
 envlist = [
@@ -273,7 +272,7 @@ commands = [
     "diff-cover --compare-branch origin/main {toxinidir}/coverage.xml",
 ]
 
-[testenv:docs]
+[tool.tox.envs.docs]
 description = "Build the documentation."
 skip_install = true
 allowlist_externals = [ "uv" ]
@@ -283,7 +282,7 @@ commands = [
     "python -c 'import pathlib; print(f\"Documentation is available under:\", pathlib.Path(f\"{toxinidir}\") / \"docs\" / \"build\" / \"html\" / \"index.html\")'",
 ]
 
-[testenv:clean-docs]
+[tool.tox.envs.clean-docs]
 description = "Clean the documentation artifacts."
 skip_install = true
 changedir = "{toxinidir}/docs"
@@ -292,7 +291,7 @@ commands = [
     "make clean",
 ]
 
-[testenv:readme]
+[tool.tox.envs.readme]
 description = "Check if README renders on PyPI."
 deps = [ ".[dev]" ]
 skip_install = true
