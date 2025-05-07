@@ -8,50 +8,22 @@
     "author_email": "your@email",
     "github_organization": "saezlab",
     "project_repo": "https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}",
-    "license": {
-        "type": "select",
-        "choices": [
-            [
-                "MIT License",
-                "MIT"
-            ],
-            [
-                "BSD 2-Clause License",
-                "BSD-2-Clause"
-            ],
-            [
-                "BSD 3-Clause License",
-                "BSD-3-Clause"
-            ],
-            [
-                "Apache License Version 2.0",
-                "Apache-2.0"
-            ],
-            [
-                "GNU Lesser General Public License Version 3",
-                "LGPL-3.0-or-later"
-            ],
-            [
-                "GNU General Public License Version 3",
-                "GPL-3.0-or-later"
-            ],
-            [
-                "ISC License",
-                "ISC"
-            ],
-            [
-                "Unlicense",
-                "Unlicense"
-            ]
-        ],
-        "default": "LGPL-3.0-or-later"
-    },
+    "license": [
+        "GNU Lesser General Public License Version 3",
+        "Apache License Version 2.0",
+        "MIT License",
+        "BSD 2-Clause License",
+        "BSD 3-Clause License",
+        "GNU General Public License Version 3",
+        "ISC License",
+        "Unlicense"
+    ],
     "python_version": [
-        "3.9",
-        "3.10",
-        "3.11",
+        "3.13",
         "3.12",
-        "3.13"
+        "3.11",
+        "3.10",
+        "3.9"
     ],
     "copyright_holder": "Heidelberg University Hospital",
     "__year": "{% now 'utc', '%Y' %}",

@@ -1,5 +1,3 @@
-import cookiecutter
-
 LICENSE_CLASSIFIERS = {
     'MIT': 'MIT License',
     'BSD-2-Clause': 'BSD License',
@@ -11,5 +9,16 @@ LICENSE_CLASSIFIERS = {
     'Unlicense': 'The Unlicense (Unlicense)',
 }
 
+LICENSE_SPDX = {
+    'MIT License': 'MIT',
+    'BSD 2-Clause License': 'BSD-2-Clause',
+    'BSD 3-Clause License': 'BSD-3-Clause',
+    'Apache License Version 2.0': 'Apache-2.0',
+    'GNU General Public License Version 3': 'GPL-3.0-or-later',
+    'ISC License': 'ISC',
+    'Unlicense': 'Unlicense',
+}
+
 license = cookiecutter.license
 cookiecutter.license_classifier = LICENSE_CLASSIFIERS.get(license, license)
+cookiecutter.license_spdx = LICENSE_SPDX.get(license, license)
