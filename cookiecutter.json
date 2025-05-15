@@ -39,6 +39,7 @@
         "BSD 3-Clause License": "BSD-3-Clause",
         "Apache License Version 2.0": "Apache-2.0",
         "GNU General Public License Version 3": "GPL-3.0-or-later",
+        "GNU Lesser General Public License Version 3": "LGPL-3.0-or-later",
         "ISC License": "ISC",
         "Unlicense": "Unlicense"
     },
