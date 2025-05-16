@@ -21,10 +21,8 @@ a number of helpful development tools set up for you. These tools are:
 
 This repo is part of the effort towards improving development practices in
 our group. For more information on these aims and the tools themselves, check
-out the `Efficient development <https://github.com/saezlab/HowTo/blob/master\
-/HowTo_efficient_development.md>`_ page of the group Howto, and the Tools
-page in `this spreadsheet <https://docs.google.com/spreadsheets/d\
-/1by744ceMxt57egyq8Q4SZUfzLRhNG6BtlpoD3ljgp90/edit#gid=0>`_ (or alternatively in the `saezbook  <https://saezbook.omnipathdb.org/Help/HowTo/efficient_development.html>`_).
+out the `Efficient development <https://github.com/saezlab/HowTo/blob/master\HowTo_efficient_development.md>`_ page of the group Howto, and the Tools
+page in `this spreadsheet <https://docs.google.com/spreadsheets/d\1by744ceMxt57egyq8Q4SZUfzLRhNG6BtlpoD3ljgp90/edit#gid=0>`_ (or alternatively in the `saezbook  <https://saezbook.omnipathdb.org/Help/HowTo/efficient_development.html>`_).
 
 Setup
 =====

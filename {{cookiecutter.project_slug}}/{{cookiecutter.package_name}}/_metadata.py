@@ -8,7 +8,7 @@
 #
 # File author(s): {{ cookiecutter.author_full_name }} ({{ cookiecutter.author_email }})
 #
-# Distributed under the {{ cookiecutter._licenses_short[cookiecutter.license] }} license
+# Distributed under the {{ cookiecutter._license[cookiecutter.license].license_short }} license
 # See the file `LICENSE` or read a copy at
 {{ '' }}{%- if cookiecutter.license == 'GNU General Public License Version 3' -%}
 
@@ -107,4 +107,4 @@ def get_metadata():
 metadata = get_metadata()
 __version__ = metadata.get('version', None)
 __author__ = metadata.get('author', None)
-__license__ = metadata.get('license', None)
+__license__ = "{{ cookiecutter._license[cookiecutter.license].license_short }}"
