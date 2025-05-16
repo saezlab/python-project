@@ -1,31 +1,40 @@
+#===================================
+#=======        BUILD       ========
+#===================================
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-{% if cookiecutter.project_name.lower().replace("-", "_") != cookiecutter.package_name -%}
-[tool.hatch.build.targets.wheel]
-packages = [ "{{ cookiecutter.package_name }}" ]
-
-{% endif -%}
+#===================================
+#=======       PROJECT      ========
+#===================================
 [project]
 name = "{{ cookiecutter.project_slug }}"
 version = "0.0.1"
 description = "{{ cookiecutter.short_description }}"
-license = "{{ cookiecutter._license_spdx }}"
-maintainers = [
-    "{{ cookiecutter.author_full_name }} <{{ cookiecutter.author_email }}>"
-]
+license = "{{ cookiecutter._license[cookiecutter.license].license_spdx }}"
+
 authors = [
-  { name = "{{ cookiecutter.author_full_name }}" },
+  {name = "{{ cookiecutter.author_full_name }}", email="{{ cookiecutter.author_email }}"},
 ]
+maintainers = [
+    {name="{{ cookiecutter.author_full_name }}", email="{{ cookiecutter.author_email }}"},
+]
+
 packages = [
     { include = "{{ cookiecutter.package_name }}" }
 ]
+
 classifiers = [
+    # How mature is this project? Common values are
+    #   2 - Pre-Alpha
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: {{ cookiecutter._license_classifier }}",
+    "License :: OSI Approved :: {{ cookiecutter._license[cookiecutter.license].license_classifiers }}",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering :: Bio-Informatics"
@@ -37,8 +46,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-
-[dependency-groups]
 dev = [
     "distlib",
     "pre-commit>=2.17.0",
@@ -55,30 +62,65 @@ tests = [
     "ruff",
 ]
 docs = [
-    "sphinx>=5.0.0",
-    "sphinx-last-updated-by-git>=0.3",
-    "sphinx-autodoc-typehints>=1.18.0",
-    "sphinxcontrib-fulltoc>=1.2.0",
-    "sphinxcontrib-bibtex",
-    "sphinx-copybutton",
-    "myst-parser",
-    "myst-nb",
-    "jupyterlab",
-    "pydata-sphinx-theme",
-    "sphinx-remove-toctrees",
-    "jupyter-contrib-nbextensions",
-    "nbsphinx",
+    "mkdocs-material>=9.6.14",
+    "pymdown-extensions>=10.15",
+    "mkdocstrings[python]>=0.29.1,<0.30"
 ]
-
-[tool.uv.sources]
-nbsphinx = { git = "https://github.com/deeenes/nbsphinx", branch = "timings" }
-jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contrib_nbextensions.git", branch = "master" }
 
 [project.urls]
 Homepage = "{{ cookiecutter.project_repo }}"
 Repository = "{{ cookiecutter.project_repo }}"
 Issues = "{{ cookiecutter.project_repo }}/issues"
 Documentation = "https://{{ cookiecutter.project_slug }}.readthedocs.io/"
+
+#===================================
+#=======        TOOL        ========
+#===================================
+[tool.coverage.run]
+source = ["{{ cookiecutter.package_name }}"]
+omit = [
+	"**/test_*.py",
+]
+
+[tool.cruft]
+skip = [
+  "tests",
+  "{{ cookiecutter.package_name }}/__init__.py",
+  "{{ cookiecutter.package_name }}/_metadata.py",
+  "docs/api.md",
+  "docs/changelog.md",
+  "docs/references.bib",
+  "docs/references.md",
+  "docs/notebooks/example.ipynb",
+]
+
+{% if cookiecutter.project_name.lower().replace("-", "_") != cookiecutter.package_name -%}
+[tool.hatch.build.targets.wheel]
+packages = [ "{{ cookiecutter.package_name }}" ]
+{% endif -%}
+
+[tool.pytest.ini_options]
+python_files = "test_*.py"
+testpaths = [
+  "tests",
+]
+xfail_strict = true
+addopts = [
+    # "-Werror",  # if 3rd party libs raise DeprecationWarnings, just use filterwarnings below
+    "--import-mode=importlib",  # allow using test files with same name
+]
+filterwarnings = [
+    # "ignore:.*U.*mode is deprecated:DeprecationWarning",
+]
+
+[tool.rstcheck]
+report_level = "INFO"
+ignore_directives = [
+    "automodule",
+    "toctree",
+]
+ignore_roles = ["ref"]
+ignore_messages = '(Unknown target name:.*|No (directive|role) entry for "(auto)?(class|method|property|function|func|mod|attr)" in module "docutils\.parsers\.rst\.languages\.en"\.)'
 
 [tool.ruff]
 line-length = 80
@@ -131,6 +173,10 @@ lint.ignore = [
 lint.pydocstyle.convention = "numpy"
 lint.quotes.inline-quotes = "single"
 
+[tool.uv.sources]
+nbsphinx = { git = "https://github.com/deeenes/nbsphinx", branch = "timings" }
+jupyter-contrib-nbextensions = { git = "https://github.com/deeenes/jupyter_contrib_nbextensions.git", branch = "master" }
+
 [tool.ruff.lint.per-file-ignores]
 "docs/*" = [ "I" ]
 "docs/src/conf.py" = [ "D100" ]
@@ -164,35 +210,6 @@ include-trailing-comma = true
 multi-line-output = 3
 exclude = [
     "docs/_build",
-]
-
-[tool.rstcheck]
-report_level = "INFO"
-ignore_directives = [
-    "automodule",
-    "toctree",
-]
-ignore_roles = ["ref"]
-ignore_messages = '(Unknown target name:.*|No (directive|role) entry for "(auto)?(class|method|property|function|func|mod|attr)" in module "docutils\.parsers\.rst\.languages\.en"\.)'
-
-[tool.coverage.run]
-source = ["{{ cookiecutter.package_name }}"]
-omit = [
-	"**/test_*.py",
-]
-
-[tool.pytest.ini_options]
-python_files = "test_*.py"
-testpaths = [
-  "tests",
-]
-xfail_strict = true
-addopts = [
-    # "-Werror",  # if 3rd party libs raise DeprecationWarnings, just use filterwarnings below
-    "--import-mode=importlib",  # allow using test files with same name
-]
-filterwarnings = [
-    # "ignore:.*U.*mode is deprecated:DeprecationWarning",
 ]
 
 [tool.tox]
@@ -301,14 +318,5 @@ commands = [
     "twine check {envtmpdir}/build/*",
 ]
 
-[tool.cruft]
-skip = [
-  "tests",
-  "{{ cookiecutter.package_name }}/__init__.py",
-  "{{ cookiecutter.package_name }}/_metadata.py",
-  "docs/api.md",
-  "docs/changelog.md",
-  "docs/references.bib",
-  "docs/references.md",
-  "docs/notebooks/example.ipynb",
-]
+
+
