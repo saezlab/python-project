@@ -1,4 +1,4 @@
-# Python project template (Saez-Rodriguz Group)
+# Python project template (Saez-Rodriguez Group)
 
 ## Description
 
@@ -22,11 +22,11 @@ This template provides tools to streamline setup and maintenance, letting you fo
 ## Pre-requisites
 > **Note:**   We strongly recommend you have the following pre-requisites before using this template. 
 
-| Pre-requisite                                                                                | Description                                                                      |
-| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [uv](https://docs.astral.sh/uv/getting-started/installation/)                                | A high-performance tool for managing Python packages and virtual environments.   |
-| [Cookiecutter](https://github.com/cookiecutter/cookiecutter?tab=readme-ov-file#installation) | A CLI tool to scaffold new projects using customizable templates.                |
-| [GitHub CLI](https://github.com/cli/cli#installation)                                        | A command-lIne tool to interact with GitHub repositories, issues, and workflows. |
+| Pre-requisite                                                 | Description                                                                      |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [uv](https://docs.astral.sh/uv/getting-started/installation/) | A high-performance tool for managing Python packages and virtual environments.   |
+| [Cruft](https://cruft.github.io/cruft/#installation)          | A CLI tool to scaffold new projects using customizable templates.                |
+| [GitHub CLI](https://github.com/cli/cli#installation)         | A command-lIne tool to interact with GitHub repositories, issues, and workflows. |
 
 ## How-to use this template?
 
@@ -36,7 +36,7 @@ In five steps you will have a ready to use Python project with batteries include
 
   Run the following command and follow the prompts in your terminal:
   ```bash
-  cookiecutter gh:saezlab/python-project
+  cruft create https://github.com/saezlab/python-project.git --checkout master
   ```
 
 **2. Navigate to Your New Project Directory**
