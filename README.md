@@ -30,7 +30,7 @@ This template provides tools to streamline setup and maintenance, letting you fo
 
 ## How-to use this template?
 
-In five steps you will have a ready to use Python project with batteries included.
+In six easy steps you will have a ready to use Python project with batteries included.
 
 **1.  Generate Your Project from the Template**
 
@@ -51,21 +51,28 @@ source .venv/bin/activate
 ```
 > This creates and activates a lightweight virtual environment in `.venv`.
 
+**4. Install and update pre-commit hooks**
+```bash
+pre-commit install
+pre-commit autoupdate
+```
 
-**4. Install Project Dependencies listed in the `pyproject.toml` file**
+**5. Install Project Dependencies listed in the `pyproject.toml` file**
 
   Install all required and optional dependencies (development, testing, docs):
   ```bash
   uv pip install ".[dev,tests,docs]"
   ```
 
-**5. Initialize Git and Push to GitHub**
+**6. Initialize Git and Push to GitHub**
 ```bash
 git init
 git add .
 git commit -m "Initial commit"
 gh repo create <GitHub-organization>/<my-project>  --public --source=. --push
 ```
+
+
 
 
 🎉 Congratulations! Wishing you every success as you begin your project journey 🚀

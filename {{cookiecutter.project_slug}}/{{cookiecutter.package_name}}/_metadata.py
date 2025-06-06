@@ -56,7 +56,7 @@ import toml
 _VERSION = '0.0.1'
 
 
-def get_metadata():
+def get_metadata() -> dict:
     """
     Basic package metadata.
 
