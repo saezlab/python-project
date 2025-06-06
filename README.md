@@ -1,4 +1,4 @@
-# Python project template
+# Python project template (Saez-Rodriguz Group)
 
 ## Description
 
@@ -7,16 +7,16 @@ This is a Cookiecutter template to create Python projects. It has been tailored 
 This template provides tools to streamline setup and maintenance, letting you focus on your project instead of getting bogged down by technical details. It includes: 
 
 - Documentation
-  - [Material for MkDocs](): A sleek, responsive theme for MkDocs documentation sites.
+  - [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/): A sleek, responsive theme for MkDocs documentation sites.
 
 - Code Quality/Automation
-  - [Pre-commit hooks](): A framework for managing and running code quality hooks before commits. 
+  - [Pre-commit hooks](https://pre-commit.com/): A framework for managing and running code quality hooks before commits. 
 
 - Release Management
-  - [Bump2version]():  A tool to automate version number management in your project.
+  - [Bump2version](https://github.com/c4urself/bump2version):  A tool to automate version number management in your project.
 
 - Testing
-  - [Pytest]():  A powerful testing framework for writing and running Python tests.
+  - [Pytest](https://docs.pytest.org/en/stable/):  A powerful testing framework for writing and running Python tests.
 
 
 ## Pre-requisites
@@ -36,7 +36,7 @@ In five steps you will have a ready to use Python project with batteries include
 
   Run the following command and follow the prompts in your terminal:
   ```bash
-  cookiecutter gh:ecarrenolozano/python-project-template
+  cookiecutter gh:saezlab/python-project
   ```
 
 **2. Navigate to Your New Project Directory**
