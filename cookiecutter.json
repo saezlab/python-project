@@ -74,6 +74,7 @@
         "cookiecutter.extensions.TimeExtension"
     ],
     "_copy_without_render": [
+        ".github/workflows/*.yml",
         ".github/workflows/**.yaml"
     ]
 }
