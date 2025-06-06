@@ -53,6 +53,7 @@ source .venv/bin/activate
 
 **4. Install and update pre-commit hooks**
 ```bash
+git init
 pre-commit install
 pre-commit autoupdate
 ```
@@ -66,7 +67,7 @@ pre-commit autoupdate
 
 **6. Initialize Git and Push to GitHub**
 ```bash
-git init
+
 git add .
 git commit -m "Initial commit"
 gh repo create <GitHub-organization>/<my-project>  --public --source=. --push

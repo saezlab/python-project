@@ -45,7 +45,7 @@ version = "0.0.1"
 [project.optional-dependencies]
 dev = [
     "distlib",
-    "pre-commit>=2.17.0",
+    "pre-commit",
     "bump2version",
     "twine",
 ]
