@@ -74,6 +74,7 @@
     ],
     "_copy_without_render": [
         ".github/workflows/*.yml",
-        ".github/workflows/**.yaml"
+        ".github/workflows/**.yaml",
+        ".github/actions/*"
     ]
 }
