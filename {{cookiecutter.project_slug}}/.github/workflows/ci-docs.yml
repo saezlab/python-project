@@ -1,11 +1,9 @@
-# .github/workflows/docs.yml
 name: Build MkDocs documentation
 
 on:
     push:
-        branches:
-        -   main
-        -   master
+        branches: [main, master]
+
 permissions:
     contents: write
 
@@ -18,28 +16,15 @@ jobs:
             run: |
                 git config user.name github-actions[bot]
                 git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-        -   uses: actions/setup-python@v5
+        -   uses: ./.github/actions/setup
             with:
-                python-version: 3.x
-        -   run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
-
-        -   name: Install uv
-            run: |
-                curl -LsSf https://astral.sh/uv/install.sh | sh
-
-        -   name: Create virtualenv and install mkdocs
-            run: |
-                uv venv .venv
-                source .venv/bin/activate
-                uv pip install ".[docs]"
-
+                python-version: '3.12'
         -   name: configure mkdocs-material cache
             uses: actions/cache@v4
             with:
-                key: mkdocs-material-${{ env.cache_id }}
+                key: mkdocs-material-${{ github.run_id }}
                 path: .cache
                 restore-keys: |
                     mkdocs-material-
-
         -   name: Build documentation with mkdocs
-            run: uv run mkdocs gh-deploy --force
+            run: .venv/bin/mkdocs gh-deploy --force

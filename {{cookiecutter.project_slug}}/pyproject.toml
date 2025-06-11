@@ -59,6 +59,7 @@ security = [
 ]
 tests = [
     "pytest>=6.0",
+    "pytest-cov",
     "tox>=3.20.1",
     "tox-gh>=1.5.0",
     "coverage>=6.0",
