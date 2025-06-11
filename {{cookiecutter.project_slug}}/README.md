@@ -4,14 +4,14 @@
 
 - [ ] TODO: Add badges to your project.
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/saezlab/{{ cookiecutter.github_username }}/test.yml?branch=master)](https://github.com/saezlab/{{ cookiecutter.github_username }}/actions/workflows/test.yml)
-[![Docs](https://img.shields.io/badge/docs-MkDocs-blue)](https://saezlab.github.io/{{ cookiecutter.github_username }}/)
+[![Tests](https://img.shields.io/github/actions/workflow/status/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}/test.yml?branch=master)](https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}/actions/workflows/test.yml)
+[![Docs](https://img.shields.io/badge/docs-MkDocs-blue)](https://saezlab.github.io/{{ cookiecutter.project_slug }}/)
 ![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)
-![PyPI](https://img.shields.io/pypi/v/{{ cookiecutter.github_username }})
-![Python](https://img.shields.io/pypi/pyversions/{{ cookiecutter.github_username }})
-![License](https://img.shields.io/github/license/saezlab/{{ cookiecutter.github_username }})
-![Issues](https://img.shields.io/github/issues/saezlab/{{ cookiecutter.github_username }})
-![Last Commit](https://img.shields.io/github/last-commit/saezlab/{{ cookiecutter.github_username }})
+![PyPI](https://img.shields.io/pypi/v/{{ cookiecutter.project_slug }})
+![Python](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project_slug }})
+![License](https://img.shields.io/github/license/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }})
+![Issues](https://img.shields.io/github/issues/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }})
+![Last Commit](https://img.shields.io/github/last-commit/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }})
 
 ## Description
 
