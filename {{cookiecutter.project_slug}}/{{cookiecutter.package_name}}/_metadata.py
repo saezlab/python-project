@@ -8,7 +8,7 @@
 #
 # File author(s): {{ cookiecutter.author_full_name }} ({{ cookiecutter.author_email }})
 #
-# Distributed under the {{ cookiecutter._licenses_short[cookiecutter.license] }} license
+# Distributed under the {{ cookiecutter._license[cookiecutter.license].license_short }} license
 # See the file `LICENSE` or read a copy at
 {{ '' }}{%- if cookiecutter.license == 'GNU General Public License Version 3' -%}
 
@@ -41,9 +41,7 @@
 {%- endif -%}{{ '' }}
 #
 
-"""
-Package metadata (version, authors, etc).
-"""
+"""Package metadata (version, authors, etc)."""
 
 __all__ = ['get_metadata']
 
@@ -56,9 +54,8 @@ import toml
 _VERSION = '0.0.1'
 
 
-def get_metadata():
-    """
-    Basic package metadata.
+def get_metadata() -> dict:
+    """Basic package metadata.
 
     Retrieves package metadata from the current project directory or from
     the installed package.
@@ -91,7 +88,8 @@ def get_metadata():
         try:
 
             meta = {
-                k.lower(): v for k, v in
+                k.lower():
+                v for k, v in
                 importlib.metadata.metadata(here.name).items()
             }
 
@@ -107,4 +105,4 @@ def get_metadata():
 metadata = get_metadata()
 __version__ = metadata.get('version', None)
 __author__ = metadata.get('author', None)
-__license__ = metadata.get('license', None)
+__license__ = '{{ cookiecutter._license[cookiecutter.license].license_short }}'
