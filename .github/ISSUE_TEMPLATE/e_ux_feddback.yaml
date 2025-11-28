@@ -1,0 +1,28 @@
+name: Template UX Feedback
+description: Provide feedback on usability and user experience of the template.
+title: "[UX] "
+labels: [feedback]
+body:
+  - type: textarea
+    id: experience
+    attributes:
+      label: User Experience
+      description: Describe your experience generating a project.
+
+  - type: textarea
+    id: prompts
+    attributes:
+      label: Cookiecutter Prompts
+      description: Were the prompts intuitive and clear?
+
+  - type: textarea
+    id: pain_points
+    attributes:
+      label: Pain Points
+      description: What felt confusing, unnecessary, or complicated?
+
+  - type: textarea
+    id: suggestions
+    attributes:
+      label: Suggestions
+      description: How can we improve the template experience?
