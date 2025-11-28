@@ -1,0 +1,39 @@
+name: Feature Request
+description: Suggest an improvement for the Cookiecutter template.
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the feature you propose.
+      placeholder: What should be added or improved?
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Rationale
+      description: Why is this feature valuable? How will users benefit?
+    validations:
+      required: true
+
+  - type: textarea
+    id: design
+    attributes:
+      label: Proposed Design
+      description: Describe how the feature could be implemented. Include template variables, folder layout changes, etc.
+
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Backward Compatibility
+      description: Could this change break existing generated projects?
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Are there other solutions or approaches?
