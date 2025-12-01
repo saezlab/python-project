@@ -1,0 +1,36 @@
+name: Cookiecutter Option Request
+description: Propose a new Cookiecutter variable or configuration option.
+title: "[Option] "
+labels: [enhancement, cookiecutter]
+body:
+  - type: input
+    id: option_name
+    attributes:
+      label: Option Name
+      placeholder: e.g., enable_fastapi
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: Why should this option exist?
+
+  - type: textarea
+    id: default
+    attributes:
+      label: Default Value
+      placeholder: "true / false / string"
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on Template
+      description: What directories, files, or hooks would be affected?
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Suggested Implementation
+      description: Optional but helpful.

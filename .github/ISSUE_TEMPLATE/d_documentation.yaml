@@ -1,0 +1,28 @@
+name: Documentation Improvement
+description: Suggest updates to the README or the generated project docs.
+title: "[Docs] "
+labels: [documentation]
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: Topic
+      description: What documentation needs improvement?
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is unclear, inaccurate, or missing?
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Improvement
+      description: How should the documentation be improved?
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Add links or examples if applicable.
