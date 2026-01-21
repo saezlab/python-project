@@ -43,66 +43,17 @@
 
 """Package metadata (version, authors, etc)."""
 
-__all__ = ['get_metadata']
+__all__ = ['__version__', '__author__', '__license__']
 
-import os
-import pathlib
 import importlib.metadata
 
-import toml
+_FALLBACK_VERSION = '0.0.1'
 
-_VERSION = '0.0.1'
+try:
+    __version__ = importlib.metadata.version('{{ cookiecutter.package_name }}')
+except importlib.metadata.PackageNotFoundError:
+    # Package not installed (e.g. running from source checkout)
+    __version__ = _FALLBACK_VERSION
 
-
-def get_metadata() -> dict:
-    """Basic package metadata.
-
-    Retrieves package metadata from the current project directory or from
-    the installed package.
-    """
-
-    here = pathlib.Path(__file__).parent
-    pyproj_toml = 'pyproject.toml'
-    meta = {}
-
-    for project_dir in (here, here.parent):
-
-        toml_path = str(project_dir.joinpath(pyproj_toml).absolute())
-
-        if os.path.exists(toml_path):
-
-            pyproject = toml.load(toml_path)
-
-            meta = {
-                'name': pyproject['tool']['poetry']['name'],
-                'version': pyproject['tool']['poetry']['version'],
-                'author': pyproject['tool']['poetry']['authors'],
-                'license': pyproject['tool']['poetry']['license'],
-                'full_metadata': pyproject,
-            }
-
-            break
-
-    if not meta:
-
-        try:
-
-            meta = {
-                k.lower():
-                v for k, v in
-                importlib.metadata.metadata(here.name).items()
-            }
-
-        except importlib.metadata.PackageNotFoundError:
-
-            pass
-
-    meta['version'] = meta.get('version', None) or _VERSION
-
-    return meta
-
-
-metadata = get_metadata()
-__version__ = metadata.get('version', None)
-__author__ = metadata.get('author', None)
+__author__ = '{{ cookiecutter.author_full_name }}'
 __license__ = '{{ cookiecutter._license[cookiecutter.license].license_short }}'

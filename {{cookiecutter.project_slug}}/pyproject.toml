@@ -27,7 +27,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics"
 ]
 dependencies = [
-    "toml",
 ]
 description = "{{ cookiecutter.short_description }}"
 license = "{{ cookiecutter._license[cookiecutter.license].license_spdx }}"
