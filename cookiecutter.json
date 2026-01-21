@@ -68,6 +68,10 @@
         "3.9"
     ],
     "copyright_holder": "Heidelberg University Hospital",
+    "include_security_workflow": [
+        "no",
+        "yes"
+    ],
     "__year": "{% now 'utc', '%Y' %}",
     "_extensions": [
         "cookiecutter.extensions.TimeExtension"
