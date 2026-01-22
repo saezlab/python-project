@@ -17,6 +17,7 @@ __pycache__/
 *.pyc
 *.kate-swp
 /.tox/
+/.venv-test-*/
 /.idea/
 /.pytest_cache/
 /.cache/

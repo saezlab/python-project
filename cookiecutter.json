@@ -72,6 +72,10 @@
         "no",
         "yes"
     ],
+    "include_multiversion_testing": [
+        "no",
+        "yes"
+    ],
     "__year": "{% now 'utc', '%Y' %}",
     "_extensions": [
         "cookiecutter.extensions.TimeExtension"
