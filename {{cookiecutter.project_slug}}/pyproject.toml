@@ -1,23 +1,12 @@
-# ===================================
-# =======        BUILD       ========
-# ===================================
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
-#===================================
-#=======       PROJECT      ========
-#===================================
 [project]
 authors = [
   {name = "{{ cookiecutter.author_full_name }}", email="{{ cookiecutter.author_email }}"},
 ]
 classifiers = [
-    # How mature is this project? Common values are
-    # 2 - Pre-Alpha
-    # 3 - Alpha
-    # 4 - Beta
-    # 5 - Production/Stable
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
@@ -34,9 +23,6 @@ maintainers = [
     {name="{{ cookiecutter.author_full_name }}", email="{{ cookiecutter.author_email }}"},
 ]
 name = "{{ cookiecutter.project_slug }}"
-# packages = [
-#    { include = "{{ cookiecutter.package_name }}" }
-# ]
 readme = "README.md"
 requires-python = ">={{ cookiecutter.python_version }}"
 version = "0.0.1"
@@ -53,9 +39,11 @@ docs = [
     "pymdown-extensions>=10.15",
     "mkdocstrings[python]>=0.29.1,<0.30"
 ]
+{% if cookiecutter.include_security_workflow == 'yes' -%}
 security = [
     "bandit"
 ]
+{% endif -%}
 tests = [
     "pytest>=6.0",
     "pytest-cov",
@@ -74,24 +62,18 @@ Issues = "{{ cookiecutter.project_repo }}/issues"
 Repository = "{{ cookiecutter.project_repo }}"
 
 
-#===================================
-#=======        TOOL        ========
-#===================================
-#---- Bandit: tool for security analysis
 [tool.bandit]
 exclude_dirs = [".venv", "venv", ".tox", "build", "dist"]
 skips = [
     "B101"  # Name: assert_used
 ]
 
-#---- Coverage: a tool used to measure code coverage of Python programs
 [tool.coverage.run]
 omit = [
 	"**/test_*.py",
 ]
 source = ["{{ cookiecutter.package_name }}"]
 
-#---- Cruft: a tool to manage and update projects based on templates
 [tool.cruft]
 skip = [
   "tests",
@@ -105,19 +87,15 @@ skip = [
 ]
 
 {% if cookiecutter.project_name.lower().replace("-", "_") != cookiecutter.package_name -%}
-#---- Hatch: a modern Python project manager for builds, environments, and publishing
 [tool.hatch.build.targets.wheel]
 packages = [ "{{ cookiecutter.package_name }}" ]
 {% endif -%}
 
-#--- Pytest: a lightweight and scalable testing tool using the pytest framework
 [tool.pytest.ini_options]
 addopts = [
-    # "-Werror",  # if 3rd party libs raise DeprecationWarnings, just use filterwarnings below
     "--import-mode=importlib",  # allow using test files with same name
 ]
 filterwarnings = [
-    # "ignore:.*U.*mode is deprecated:DeprecationWarning",
 ]
 python_files = "test_*.py"
 testpaths = [
@@ -125,7 +103,6 @@ testpaths = [
 ]
 xfail_strict = true
 
-#---- RSTcheck: a tool to lint reStructuredText (.rst) files.
 [tool.rstcheck]
 ignore_directives = [
     "automodule",
@@ -135,7 +112,6 @@ ignore_messages = '(Unknown target name:.*|No (directive|role) entry for "(auto)
 ignore_roles = ["ref"]
 report_level = "INFO"
 
-#---- Ruff: a fast Python linter and formatter.
 [tool.ruff]
 extend-include = [ "*.ipynb" ]
 line-length = 80
@@ -220,7 +196,6 @@ section-order = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-#---- tox: a tool to automate testing in multiple environments.
 [tool.tox]
 envlist = [
     "covclean",
@@ -256,10 +231,10 @@ platform = [
 usedevelop = true
 
 [tool.tox.envs.clean-docs]
-allowlist_externals = ["make"]
+allowlist_externals = ["rm"]
 changedir = "{toxinidir}/docs"
 commands = [
-    "make clean"
+    "rm -rf site"
 ]
 description = "Clean the documentation artifacts."
 skip_install = true
@@ -288,8 +263,8 @@ skip_install = true
 allowlist_externals = ["uv"]
 commands = [
     "uv sync --extra docs",
-    "uv run sphinx-build --color -b html {toxinidir}/docs/source {toxinidir}/docs/build/html",
-    "python -c 'import pathlib; print(f\"Documentation is available under:\", pathlib.Path(f\"{toxinidir}\") / \"docs\" / \"build\" / \"html\" / \"index.html\")'"
+    "uv run mkdocs build",
+    "python -c 'import pathlib; print(f\"Documentation is available under:\", pathlib.Path(f\"{toxinidir}\") / \"site\" / \"index.html\")'"
 ]
 description = "Build the documentation."
 skip_install = true
@@ -326,7 +301,3 @@ python = [
     "3.12: py312",
     "3.13: py313"
 ]
-
-[tool.uv.sources]
-jupyter-contrib-nbextensions = {git = "https://github.com/deeenes/jupyter_contrib_nbextensions.git", branch = "master"}
-nbsphinx = {git = "https://github.com/deeenes/nbsphinx", branch = "timings"}
