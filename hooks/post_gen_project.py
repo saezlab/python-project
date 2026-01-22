@@ -26,7 +26,8 @@ def remove_path(path):
 
 
 def main():
-    """Remove optional files based on cookiecutter configuration."""
+    """Post-generation processing."""
+    # Remove optional files based on configuration
     for path in REMOVE_PATHS:
         remove_path(path)
 

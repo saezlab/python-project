@@ -79,10 +79,5 @@
     "__year": "{% now 'utc', '%Y' %}",
     "_extensions": [
         "cookiecutter.extensions.TimeExtension"
-    ],
-    "_copy_without_render": [
-        ".github/workflows/*.yml",
-        ".github/workflows/**.yaml",
-        ".github/actions/*"
     ]
 }
