@@ -73,6 +73,19 @@ git commit -m "Initial commit"
 gh repo create <GitHub-organization>/<my-project>  --public --source=. --push
 ```
 
+**7. Link to the template**
+```bash
+cruft link 
+https://github.com/saezlab/python-project
+```
+
+This links your project to the template so you can later do:
+
+```bash
+cruft update
+```
+
+---
 
 🎉 Congratulations! Wishing you every success as you begin your project journey 🚀
 
