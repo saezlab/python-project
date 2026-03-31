@@ -4,7 +4,8 @@
 
 - [ ] TODO: Add badges to your project.
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}/test.yml?branch=master)](https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}/actions/workflows/test.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}/ci-testing-unit.yml?branch=master&label=tests)](https://github.com/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}/actions/workflows/ci-testing-unit.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }})](https://codecov.io/gh/{{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }})
 [![Docs](https://img.shields.io/badge/docs-MkDocs-blue)](https://saezlab.github.io/{{ cookiecutter.project_slug }}/)
 ![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)
 ![PyPI](https://img.shields.io/pypi/v/{{ cookiecutter.project_slug }})
