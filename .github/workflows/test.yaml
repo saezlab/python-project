@@ -2,13 +2,24 @@ name: Test
 
 on:
     push:
-        branches: [master]
+        branches: [master, main]
     pull_request:
-        branches: [master]
+        branches: [master, main]
+    schedule:
+    -   cron: 0 5 1,15 * *
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
 
 jobs:
 
     test:
+        name: ${{ matrix.variant.project_name }} / Python ${{ matrix.python }} / ${{ matrix.os }}
         runs-on: ${{ matrix.os }}
         defaults:
             run:
@@ -17,66 +28,149 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                python: ['3.9', '3.13']
+                python: ['3.11', '3.13']
                 os: [ubuntu-latest, macos-latest]
-                project_name: [project_name, alt_name]
-        env:
-            PROJECT_ROOT: ${{ matrix.project_name }}
+                # `Project Name` has a slug (`project-name`) that differs from
+                # its package name (`project_name`), `alt_name` does not: the
+                # two exercise both branches of the conditional blocks in the
+                # generated `pyproject.toml`. The security workflow is switched
+                # on in one variant and off in the other so that both the
+                # workflow itself and its removal by the post-generation hook
+                # are covered.
+                variant:
+                -   project_name: Project Name
+                    security: true
+                -   project_name: alt_name
+                    security: false
 
         steps:
         -   name: Checkout
-            uses: actions/checkout@v4
+            uses: actions/checkout@v7
             with:
                 fetch-depth: 0
-
-        -   name: Install Ubuntu system dependencies
-            if: matrix.os == 'ubuntu-latest'
-            run: |
-                sudo apt-get update
-                sudo apt-get install -y pandoc
+                persist-credentials: false
 
         -   name: Install uv
-            uses: astral-sh/setup-uv@v5
+            uses: astral-sh/setup-uv@v10.0.1
             with:
                 enable-cache: true
                 python-version: ${{ matrix.python }}
 
-        -   name: Install Python {{ matrix.python }}
-            run: |
-                uv python install --python-preference only-managed ${{ matrix.python }}
-
-        -   name: Install Python dependencies
-            run: |
-                uv pip install cookiecutter pre-commit
-
         -   name: Instantiate the template
-            shell: python
+            id: instantiate
+            shell: bash
+            env:
+                PROJECT_NAME: ${{ matrix.variant.project_name }}
+                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.variant.security && 'yes' || 'no' }}
+                PYTHON_VERSION: ${{ matrix.python }}
             run: |
-                from cookiecutter.main import cookiecutter
-                overrides = dict(project_name='${{ matrix.project_name }}')
-                cookiecutter('.', no_input=True, extra_context=overrides)
+                uv run --no-project --with cookiecutter python - <<'PY'
+                import os
 
-        -   name: Set up pre-commit cache
-            uses: actions/cache@v3
+                from cookiecutter.main import cookiecutter
+
+                overrides = {
+                    'project_name': os.environ['PROJECT_NAME'],
+                    'include_security_workflow': os.environ['INCLUDE_SECURITY_WORKFLOW'],
+                    'python_version': os.environ['PYTHON_VERSION'],
+                }
+                path = os.path.relpath(
+                    cookiecutter('.', no_input=True, extra_context=overrides),
+                )
+
+                with open(os.environ['GITHUB_OUTPUT'], 'a') as fp:
+                    fp.write(f'project-root={path}\n')
+
+                print(f'Generated the project in `{path}`.')
+                PY
+
+        -   name: Check that the generated workflows are valid YAML
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                uv run --no-project --with pyyaml python - <<'PY'
+                from pathlib import Path
+                import sys
+
+                import yaml
+
+                paths = sorted(Path('.github').rglob('*.yml'))
+                paths += sorted(Path('.github').rglob('*.yaml'))
+
+                for path in paths:
+                    yaml.safe_load(path.read_text())
+                    print(f'ok: {path}')
+
+                if not paths:
+                    sys.exit('No workflow or action definitions were generated.')
+                PY
+
+        -   name: Check that the security workflow follows the option
+            env:
+                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.variant.security && 'yes' || 'no' }}
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                if [ "$INCLUDE_SECURITY_WORKFLOW" = yes ]; then
+                    test -f .github/workflows/security.yaml
+                else
+                    test ! -e .github/workflows/security.yaml
+                fi
+
+        -   name: Set up the pre-commit cache
+            uses: actions/cache@v6
             with:
                 path: ~/.cache/pre-commit
-                key: pre-commit-3|${{ matrix.python }}|${{ hashFiles(format('{0}/.pre-commit-config.yaml', env.PROJECT_ROOT)) }}
+                key: pre-commit-3|${{ matrix.python }}|${{ hashFiles(format('{0}/.pre-commit-config.yaml', steps.instantiate.outputs.project-root)) }}
 
+        # TODO: drop `continue-on-error` once the hooks that ruff supersedes
+        # are removed from the generated `.pre-commit-config.yaml` (scenario 3
+        # of the template audit); `unexport`, `blacken-docs` and the
+        # `pretty-format-*` hooks currently rewrite the freshly generated files.
         -   name: Run pre-commit
             continue-on-error: true
             run: |
-                cd "$PROJECT_ROOT"
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                git init --quiet --initial-branch=main .
                 git add .
-                pre-commit run --color=always --show-diff-on-failure --all-files
+                uv run --no-project --with pre-commit pre-commit run \
+                    --color=always --show-diff-on-failure --all-files
 
-        -   name: Install project as a package
+        -   name: Install the generated project
             run: |
-                cd "$PROJECT_ROOT"
-                uv pip install -e .[dev,tests,docs]
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                uv venv .venv --python '${{ matrix.python }}'
+                uv pip install --python .venv/bin/python -e '.[dev,tests,docs]'
 
-        -   name: Build documentation
-            env:
-                SPHINXOPTS: -W --keep-going
+        -   name: Lint the generated project
             run: |
-                cd "$PROJECT_ROOT"
-                uv run make html --directory docs/
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                .venv/bin/ruff check --output-format=github .
+                .venv/bin/ruff format --check --diff .
+
+        -   name: Run the tests of the generated project
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                .venv/bin/pytest -v
+
+        -   name: Build the documentation of the generated project
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                .venv/bin/mkdocs build --strict
+
+        -   name: Build and check the distribution of the generated project
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                uv build
+                uvx twine check --strict dist/*
+
+    # Single gate to require in the branch protection rules, so that the
+    # required checks do not have to be updated when the matrix changes.
+    # See https://github.com/re-actors/alls-green#why
+    check:
+        name: All checks passed
+        if: always()
+        needs: [test]
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: re-actors/alls-green@v1.3.0
+            with:
+                jobs: ${{ toJSON(needs) }}

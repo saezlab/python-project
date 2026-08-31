@@ -1,0 +1,42 @@
+name: Deploy documentation
+
+on:
+    push:
+        branches: [main, master]
+    workflow_dispatch:
+
+# Never run two deployments to the `gh-pages` branch at the same time, but
+# let a running deployment finish instead of cancelling it half way.
+concurrency:
+    group: ${{ '{{' }} github.workflow {{ '}}' }}
+    cancel-in-progress: false
+
+permissions:
+    contents: write
+
+jobs:
+
+    deploy:
+        name: Build and publish to GitHub Pages
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v7
+            with:
+                fetch-depth: 0
+        -   name: Configure the git credentials
+            run: |
+                git config user.name 'github-actions[bot]'
+                git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        -   uses: ./.github/actions/setup
+            with:
+                python-version: '3.13'
+                extras: docs
+        -   name: Cache the mkdocs-material build cache
+            uses: actions/cache@v6
+            with:
+                key: mkdocs-material-${{ '{{' }} github.run_id {{ '}}' }}
+                path: .cache
+                restore-keys: |
+                    mkdocs-material-
+        -   name: Deploy the documentation
+            run: .venv/bin/mkdocs gh-deploy --force

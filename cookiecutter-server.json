@@ -22,9 +22,6 @@
     "_extensions": [
         "jinja2_time.TimeExtension"
     ],
-    "_copy_without_render": [
-        ".github/workflows/**.yaml"
-    ],
     "_licenses_short": {
         "MIT License": "MIT",
         "BSD 2-Clause License": "BSD-2",

@@ -11,7 +11,7 @@ include_multiversion_testing = '{{ cookiecutter.include_multiversion_testing }}'
 REMOVE_PATHS = []
 
 if include_security_workflow == 'no':
-    REMOVE_PATHS.append('.github/workflows/ci-security.yml')
+    REMOVE_PATHS.append('.github/workflows/security.yaml')
 
 if include_multiversion_testing == 'no':
     REMOVE_PATHS.append('scripts')
