@@ -1,0 +1,42 @@
+/*
+ * OmniPath / Saez-lab palette for mkdocs-material.
+ *
+ * `mkdocs.yml` selects `primary: custom` and `accent: custom`, which makes
+ * Material read the two variables below instead of one of its built-in
+ * colour schemes. Change the two hex values to re-brand the whole site.
+ */
+
+:root {
+    --omnipath-teal: #007B7F;
+    --omnipath-teal-light: #00969B;
+    --omnipath-green: #6EA945;
+}
+
+[data-md-color-primary='custom'] {
+    --md-primary-fg-color: var(--omnipath-teal);
+    --md-primary-fg-color--light: var(--omnipath-teal-light);
+    --md-primary-fg-color--dark: #005F62;
+    --md-primary-bg-color: #ffffff;
+    --md-primary-bg-color--light: #ffffffb3;
+}
+
+[data-md-color-accent='custom'] {
+    --md-accent-fg-color: var(--omnipath-green);
+    --md-accent-fg-color--transparent: #6ea9451a;
+    --md-accent-bg-color: #ffffff;
+    --md-accent-bg-color--light: #ffffffb3;
+}
+
+.md-header {
+    background-color: var(--omnipath-teal);
+}
+
+/* In dark mode Material paints the header from the scheme, not from
+   `--md-primary-fg-color`; keep the brand colour there as well. */
+[data-md-color-scheme='slate'] .md-header {
+    background-color: var(--omnipath-teal);
+}
+
+[data-md-color-scheme='slate'] {
+    --md-typeset-a-color: var(--omnipath-teal-light);
+}

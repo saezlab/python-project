@@ -19,7 +19,7 @@ permissions:
 jobs:
 
     test:
-        name: ${{ matrix.variant.project_name }} / Python ${{ matrix.python }} / ${{ matrix.os }}
+        name: ${{ matrix.profile }} / Python ${{ matrix.python }} / ${{ matrix.os }}
         runs-on: ${{ matrix.os }}
         defaults:
             run:
@@ -27,21 +27,58 @@ jobs:
 
         strategy:
             fail-fast: false
+            # One entry per combination worth paying for rather than a full
+            # cross product (SC-016 asks for all three profiles, not for all
+            # three on every runner):
+            #
+            # - `Project Name` has a slug (`project-name`) that differs from its
+            #   package name (`project_name`), `alt_name` does not; the two
+            #   exercise both branches of the conditional blocks in the
+            #   generated `pyproject.toml`.
+            # - `security` is on in one variant and off in the others, so both
+            #   the workflow itself and its removal by the post-generation hook
+            #   are covered.
+            # - the `package` profile is the one people will use, so it is the
+            #   one tested on both the oldest and the newest supported Python
+            #   and on macOS as well.
             matrix:
-                python: ['3.11', '3.13']
-                os: [ubuntu-latest, macos-latest]
-                # `Project Name` has a slug (`project-name`) that differs from
-                # its package name (`project_name`), `alt_name` does not: the
-                # two exercise both branches of the conditional blocks in the
-                # generated `pyproject.toml`. The security workflow is switched
-                # on in one variant and off in the other so that both the
-                # workflow itself and its removal by the post-generation hook
-                # are covered.
-                variant:
-                -   project_name: Project Name
+                include:
+                -   profile: package
+                    project_name: Project Name
+                    package_name: project_name
                     security: true
-                -   project_name: alt_name
+                    extras: dev,tests,docs
+                    python: '3.10'
+                    os: ubuntu-latest
+                -   profile: package
+                    project_name: Project Name
+                    package_name: project_name
+                    security: true
+                    multiversion: true
+                    extras: dev,tests,docs
+                    python: '3.13'
+                    os: ubuntu-latest
+                -   profile: package
+                    project_name: Project Name
+                    package_name: project_name
+                    security: true
+                    extras: dev,tests,docs
+                    python: '3.13'
+                    os: macos-latest
+                -   profile: workflow
+                    project_name: alt_name
+                    package_name: alt_name
                     security: false
+                    extras: dev,tests
+                    python: '3.13'
+                    os: ubuntu-latest
+                -   profile: tiny
+                    project_name: tiny_thing
+                    package_name: tiny_thing
+                    security: false
+                    extras: dev,tests
+                    python: '3.13'
+                    os: ubuntu-latest
 
         steps:
         -   name: Checkout
@@ -56,26 +93,37 @@ jobs:
                 enable-cache: true
                 python-version: ${{ matrix.python }}
 
+        # `cruft create` rather than plain `cookiecutter`, so that the
+        # generated project carries a `.cruft.json` and the scaffold is proven
+        # to be `cruft update`-compatible (SC-016).
         -   name: Instantiate the template
             id: instantiate
-            shell: bash
             env:
-                PROJECT_NAME: ${{ matrix.variant.project_name }}
-                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.variant.security && 'yes' || 'no' }}
+                PROJECT_NAME: ${{ matrix.project_name }}
+                PROJECT_PROFILE: ${{ matrix.profile }}
+                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.security && 'yes' || 'no' }}
+                INCLUDE_MULTIVERSION_TESTING: ${{ matrix.multiversion && 'yes' || 'no' }}
                 PYTHON_VERSION: ${{ matrix.python }}
             run: |
-                uv run --no-project --with cookiecutter python - <<'PY'
+                uv run --no-project --with cruft python - <<'PY'
                 import os
 
-                from cookiecutter.main import cookiecutter
+                import cruft
 
                 overrides = {
                     'project_name': os.environ['PROJECT_NAME'],
+                    'project_profile': os.environ['PROJECT_PROFILE'],
                     'include_security_workflow': os.environ['INCLUDE_SECURITY_WORKFLOW'],
+                    'include_multiversion_testing': os.environ['INCLUDE_MULTIVERSION_TESTING'],
                     'python_version': os.environ['PYTHON_VERSION'],
                 }
                 path = os.path.relpath(
-                    cookiecutter('.', no_input=True, extra_context=overrides),
+                    cruft.create(
+                        '.',
+                        checkout = os.environ['GITHUB_SHA'],
+                        no_input = True,
+                        extra_context = overrides,
+                    ),
                 )
 
                 with open(os.environ['GITHUB_OUTPUT'], 'a') as fp:
@@ -84,12 +132,83 @@ jobs:
                 print(f'Generated the project in `{path}`.')
                 PY
 
+        -   name: Check the layout the profile promises
+            env:
+                PROJECT_PROFILE: ${{ matrix.profile }}
+                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.security && 'yes' || 'no' }}
+                INCLUDE_MULTIVERSION_TESTING: ${{ matrix.multiversion && 'yes' || 'no' }}
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                uv run --no-project python - <<'PY'
+                import os
+                import sys
+                from pathlib import Path
+
+                profile = os.environ['PROJECT_PROFILE']
+                security = os.environ['INCLUDE_SECURITY_WORKFLOW'] == 'yes'
+
+                # (path, present in `package`, in `workflow`, in `tiny`)
+                expected = [
+                    ('pyproject.toml', True, True, True),
+                    ('.pre-commit-config.yaml', True, True, True),
+                    ('.cruft.json', True, True, True),
+                    ('tests/test_placeholder.py', True, True, True),
+                    ('.bumpversion.cfg', True, False, False),
+                    ('mkdocs.yml', True, False, False),
+                    ('docs/index.md', True, False, False),
+                    ('docs/guide.md', True, False, False),
+                    ('docs/reference', True, False, False),
+                    ('docs/assets/omnipath-theme.css', True, False, False),
+                    ('docs/quickstart.md', True, True, False),
+                    ('.github/workflows/test.yaml', True, True, False),
+                    ('.github/workflows/build.yaml', True, True, False),
+                    ('.github/workflows/release.yaml', True, True, False),
+                    ('.github/workflows/template-update.yaml', True, True, False),
+                    ('.github/workflows/docs.yaml', True, False, False),
+                    ('.codecov.yaml', True, True, False),
+                ]
+                column = {'package': 1, 'workflow': 2, 'tiny': 3}[profile]
+
+                errors = []
+
+                for row in expected:
+                    path, wanted = row[0], row[column]
+                    if Path(path).exists() is not wanted:
+                        errors.append(
+                            f'`{path}` should {"" if wanted else "not "}exist '
+                            f'in the `{profile}` profile.',
+                        )
+
+                wanted = security and profile != 'tiny'
+                if Path('.github/workflows/security.yaml').exists() is not wanted:
+                    errors.append(
+                        '`.github/workflows/security.yaml` does not follow '
+                        '`include_security_workflow`.',
+                    )
+
+                multiversion = (
+                    os.environ['INCLUDE_MULTIVERSION_TESTING'] == 'yes'
+                )
+                wanted = multiversion and profile != 'tiny'
+                if Path('scripts').exists() is not wanted:
+                    errors.append(
+                        '`scripts/` does not follow '
+                        '`include_multiversion_testing`.',
+                    )
+
+                for error in errors:
+                    print(error, file = sys.stderr)
+
+                sys.exit(1 if errors else 0)
+                PY
+
         -   name: Check that the generated workflows are valid YAML
+            if: matrix.profile != 'tiny'
             run: |
                 cd "${{ steps.instantiate.outputs.project-root }}"
                 uv run --no-project --with pyyaml python - <<'PY'
-                from pathlib import Path
                 import sys
+                from pathlib import Path
 
                 import yaml
 
@@ -104,33 +223,17 @@ jobs:
                     sys.exit('No workflow or action definitions were generated.')
                 PY
 
-        -   name: Check that the security workflow follows the option
-            env:
-                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.variant.security && 'yes' || 'no' }}
-            run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
-                if [ "$INCLUDE_SECURITY_WORKFLOW" = yes ]; then
-                    test -f .github/workflows/security.yaml
-                else
-                    test ! -e .github/workflows/security.yaml
-                fi
-
         -   name: Set up the pre-commit cache
             uses: actions/cache@v6
             with:
                 path: ~/.cache/pre-commit
-                key: pre-commit-3|${{ matrix.python }}|${{ hashFiles(format('{0}/.pre-commit-config.yaml', steps.instantiate.outputs.project-root)) }}
+                key: pre-commit-4|${{ matrix.python }}|${{ hashFiles(format('{0}/.pre-commit-config.yaml', steps.instantiate.outputs.project-root)) }}
 
-        # TODO: drop `continue-on-error` once the hooks that ruff supersedes
-        # are removed from the generated `.pre-commit-config.yaml` (scenario 3
-        # of the template audit); `unexport`, `blacken-docs` and the
-        # `pretty-format-*` hooks currently rewrite the freshly generated files.
         -   name: Run pre-commit
-            continue-on-error: true
             run: |
                 cd "${{ steps.instantiate.outputs.project-root }}"
                 git init --quiet --initial-branch=main .
-                git add .
+                git add -A
                 uv run --no-project --with pre-commit pre-commit run \
                     --color=always --show-diff-on-failure --all-files
 
@@ -138,7 +241,7 @@ jobs:
             run: |
                 cd "${{ steps.instantiate.outputs.project-root }}"
                 uv venv .venv --python '${{ matrix.python }}'
-                uv pip install --python .venv/bin/python -e '.[dev,tests,docs]'
+                uv pip install --python .venv/bin/python -e '.[${{ matrix.extras }}]'
 
         -   name: Lint the generated project
             run: |
@@ -152,15 +255,30 @@ jobs:
                 .venv/bin/pytest -v
 
         -   name: Build the documentation of the generated project
+            if: matrix.profile == 'package'
             run: |
                 cd "${{ steps.instantiate.outputs.project-root }}"
                 .venv/bin/mkdocs build --strict
+
+        -   name: Run bandit on the generated project
+            if: matrix.security
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                uvx --from 'bandit[toml]' bandit -c pyproject.toml -r ${{ matrix.package_name }}
 
         -   name: Build and check the distribution of the generated project
             run: |
                 cd "${{ steps.instantiate.outputs.project-root }}"
                 uv build
                 uvx twine check --strict dist/*
+
+        # The project must still consider itself up to date with the template
+        # commit it was just created from, otherwise `cruft update` would offer
+        # a spurious diff on day one.
+        -   name: Check that the project is in sync with the template
+            run: |
+                cd "${{ steps.instantiate.outputs.project-root }}"
+                uv run --no-project --with cruft cruft check
 
     # Single gate to require in the branch protection rules, so that the
     # required checks do not have to be updated when the matrix changes.

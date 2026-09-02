@@ -1,3 +1,9 @@
+{%- set _all = cookiecutter._python_versions -%}
+{%- set _pythons = _all[_all.index(cookiecutter.python_version):] -%}
+{%- if cookiecutter.project_profile == 'workflow' -%}
+{%- set _pythons = [_pythons[0], _pythons[-1]]|unique|list -%}
+{%- endif -%}
+{%- set _latest = _pythons[-1] -%}
 name: Test
 
 on:
@@ -27,7 +33,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                python-version: ['3.10', '3.11', '3.12', '3.13']
+                # Every Python this project claims to support, i.e. everything
+                # from `requires-python` upwards.
+                python-version: {{ _pythons|tojson }}
         steps:
         -   uses: actions/checkout@v7
             with:
@@ -41,7 +49,7 @@ jobs:
             run: |
                 .venv/bin/pytest --cov={{ cookiecutter.package_name }} --cov-report=xml tests/
         -   name: Upload the coverage report to Codecov
-            if: matrix.python-version == '3.12'
+            if: matrix.python-version == '{{ _latest }}'
             uses: codecov/codecov-action@v7
             with:
                 files: coverage.xml
@@ -58,13 +66,13 @@ jobs:
                 persist-credentials: false
         -   uses: ./.github/actions/setup
             with:
-                python-version: '3.13'
+                python-version: '{{ _latest }}'
                 extras: tests
         -   name: Run ruff (lint and import order)
             run: .venv/bin/ruff check --output-format=github .
         -   name: Run ruff format check
             run: .venv/bin/ruff format --check --diff .
-
+{% if cookiecutter.project_profile == 'package' %}
     docs:
         name: Documentation build
         runs-on: ubuntu-latest
@@ -75,18 +83,18 @@ jobs:
                 persist-credentials: false
         -   uses: ./.github/actions/setup
             with:
-                python-version: '3.13'
+                python-version: '{{ _latest }}'
                 extras: docs
         -   name: Build the documentation
             run: .venv/bin/mkdocs build --strict
-
+{% endif %}
     # Single gate to require in the branch protection rules, so that the
     # required checks do not have to be updated when the matrix changes.
     # See https://github.com/re-actors/alls-green#why
     check:
         name: All checks passed
         if: always()
-        needs: [test, lint, docs]
+        needs: [test, lint{% if cookiecutter.project_profile == 'package' %}, docs{% endif %}]
         runs-on: ubuntu-latest
         steps:
         -   uses: re-actors/alls-green@v1.3.0

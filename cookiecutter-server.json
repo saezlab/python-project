@@ -2,8 +2,14 @@
     "project_name": "OmniPath Server",
     "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
     "package_name": "{{ cookiecutter.project_slug|lower|replace('-', '_') }}",
+    "project_profile": [
+        "package",
+        "workflow",
+        "tiny"
+    ],
     "project_description": "OmniPath HTTP server based on Twisted",
     "short_description": "{{ cookiecutter.project_description }}",
+    "readme": "{{ cookiecutter.short_description }}",
     "author_full_name": "OmniPath Team",
     "author_email": "omnipathdb@gmail.com",
     "github_organization": "saezlab",
@@ -11,24 +17,71 @@
     "license": [
         "GNU General Public License Version 3"
     ],
+    "_license": {
+        "MIT License": {
+            "license_short": "MIT",
+            "license_classifiers": "MIT License",
+            "license_spdx": "MIT"
+        },
+        "BSD 2-Clause License": {
+            "license_short": "BSD-2-Clause",
+            "license_classifiers": "BSD License",
+            "license_spdx": "BSD-2-Clause"
+        },
+        "BSD 3-Clause License": {
+            "license_short": "BSD-3-Clause",
+            "license_classifiers": "BSD License",
+            "license_spdx": "BSD-3-Clause"
+        },
+        "Apache License Version 2.0": {
+            "license_short": "Apache-2.0",
+            "license_classifiers": "Apache Software License",
+            "license_spdx": "Apache-2.0"
+        },
+        "GNU General Public License Version 3": {
+            "license_short": "GPL-3.0-or-later",
+            "license_classifiers": "GNU General Public License v3 (GPLv3)",
+            "license_spdx": "GPL-3.0-or-later"
+        },
+        "GNU Lesser General Public License Version 3": {
+            "license_short": "LGPL-3.0-or-later",
+            "license_classifiers": "GNU Lesser General Public License v3 (LGPLv3)",
+            "license_spdx": "LGPL-3.0-or-later"
+        },
+        "ISC License": {
+            "license_short": "ISC",
+            "license_classifiers": "ISC License (ISCL)",
+            "license_spdx": "ISC"
+        },
+        "Unlicense": {
+            "license_short": "Unlicense",
+            "license_classifiers": "The Unlicense (Unlicense)",
+            "license_spdx": "Unlicense"
+        }
+    },
     "python_version": [
-        "3.9",
+        "3.13",
+        "3.12",
+        "3.11",
+        "3.10"
+    ],
+    "_python_versions": [
         "3.10",
         "3.11",
-        "3.12"
+        "3.12",
+        "3.13"
     ],
     "copyright_holder": "Heidelberg University Hospital",
+    "include_security_workflow": [
+        "no",
+        "yes"
+    ],
+    "include_multiversion_testing": [
+        "no",
+        "yes"
+    ],
     "__year": "{% now 'utc', '%Y' %}",
     "_extensions": [
-        "jinja2_time.TimeExtension"
-    ],
-    "_licenses_short": {
-        "MIT License": "MIT",
-        "BSD 2-Clause License": "BSD-2",
-        "BSD 3-Clause License": "BSD-3",
-        "Apache License Version 2.0": "Apache 2.0",
-        "GNU General Public License Version 3": "GPLv3",
-        "ISC License": "ISC",
-        "Unlicense": "Unlicense"
-    }
+        "cookiecutter.extensions.TimeExtension"
+    ]
 }

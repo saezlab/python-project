@@ -1,0 +1,87 @@
+name: Template update
+
+# Pulls the changes made to the `{{ cookiecutter.github_organization }}/python-project`
+# cookiecutter template into this repository and opens a pull request with
+# them. It is a no-op unless the project was created with `cruft create`
+# (rather than plain `cookiecutter`), because only then is there a
+# `.cruft.json` recording which template commit this project is based on.
+#
+# The paths this project owns rather than inherits are listed under
+# `[tool.cruft] skip` in `pyproject.toml` and are never touched.
+#
+# Requires "Allow GitHub Actions to create and approve pull requests" under
+# Settings -> Actions -> General.
+
+on:
+    schedule:
+    -   cron: 0 6 1 * *
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ '{{' }} github.workflow {{ '}}' }}
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+
+    cruft:
+        name: Open a pull request with the template changes
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+        -   uses: actions/checkout@v7
+            with:
+                fetch-depth: 0
+
+        -   name: Look for the cruft state file
+            id: state
+            run: |
+                if [ -f .cruft.json ]; then
+                    echo 'found=true' >> "$GITHUB_OUTPUT"
+                else
+                    echo 'found=false' >> "$GITHUB_OUTPUT"
+                    echo 'No `.cruft.json` in this repository, so there is no' \
+                        'template link to update. Run `cruft link` once to' \
+                        'enable automatic template updates.' \
+                        >> "$GITHUB_STEP_SUMMARY"
+                fi
+
+        -   name: Install uv
+            if: steps.state.outputs.found == 'true'
+            uses: astral-sh/setup-uv@v10.0.1
+            with:
+                enable-cache: true
+
+        -   name: Apply the template changes
+            if: steps.state.outputs.found == 'true'
+            run: |
+                git config user.name 'github-actions[bot]'
+                git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                uv run --no-project --with cruft \
+                    cruft update --skip-apply-ask --allow-untracked-files
+
+        -   name: Open the pull request
+            if: steps.state.outputs.found == 'true'
+            uses: peter-evans/create-pull-request@v8.1.1
+            with:
+                branch: chore/template-update
+                delete-branch: true
+                title: 'chore: update from the project template'
+                commit-message: 'chore: update from the project template'
+                labels: automated
+                body: |
+                    Automated `cruft update` against
+                    [{{ cookiecutter.github_organization }}/python-project](https://github.com/{{ cookiecutter.github_organization }}/python-project).
+
+                    Where a template change collided with a local change, cruft
+                    leaves the conflict in a `.rej` file next to the affected
+                    file. Resolve those by hand, delete the `.rej` files and
+                    push to this branch before merging.
+
+                    Opened with the default `GITHUB_TOKEN`, so merging this pull
+                    request does not itself trigger the other workflows; close
+                    and reopen it to run them.

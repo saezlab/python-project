@@ -2,6 +2,11 @@
     "project_name": "Project Name",
     "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
     "package_name": "{{ cookiecutter.project_slug|lower|replace('-', '_') }}",
+    "project_profile": [
+        "package",
+        "workflow",
+        "tiny"
+    ],
     "short_description": "A great new project.",
     "readme": "{{ cookiecutter.short_description }}",
     "author_full_name": "Your Name",
@@ -64,8 +69,13 @@
         "3.13",
         "3.12",
         "3.11",
+        "3.10"
+    ],
+    "_python_versions": [
         "3.10",
-        "3.9"
+        "3.11",
+        "3.12",
+        "3.13"
     ],
     "copyright_holder": "Heidelberg University Hospital",
     "include_security_workflow": [
@@ -79,5 +89,35 @@
     "__year": "{% now 'utc', '%Y' %}",
     "_extensions": [
         "cookiecutter.extensions.TimeExtension"
-    ]
+    ],
+    "__prompts__": {
+        "project_name": "Human readable name of the project, e.g. `My Great Project`",
+        "project_slug": "Repository and PyPI name (derived from the project name)",
+        "package_name": "Importable Python package name (derived from the slug)",
+        "project_profile": {
+            "__prompt__": "What kind of project is this?",
+            "package": "package - a distributed library: full mkdocs site, full CI matrix, API reference, bump2version",
+            "workflow": "workflow - an analysis or pipeline repo: lighter CI, README + quickstart only, no docs site",
+            "tiny": "tiny - a scratch or single-purpose repo: pyproject.toml, ruff and pre-commit only"
+        },
+        "short_description": "One sentence describing the project",
+        "readme": "Introductory paragraph for `README.md`",
+        "author_full_name": "Full name of the main author",
+        "author_email": "Contact email of the main author",
+        "github_organization": "GitHub organization or user owning the repository",
+        "project_repo": "URL of the GitHub repository",
+        "license": "License to distribute the project under",
+        "python_version": "Minimum supported Python version",
+        "copyright_holder": "Legal entity holding the copyright",
+        "include_security_workflow": {
+            "__prompt__": "Add a `bandit` security scanning workflow?",
+            "no": "no",
+            "yes": "yes"
+        },
+        "include_multiversion_testing": {
+            "__prompt__": "Add the `scripts/test-multi-py.py` local multi-version test helper?",
+            "no": "no",
+            "yes": "yes"
+        }
+    }
 }

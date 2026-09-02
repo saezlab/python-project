@@ -10,10 +10,11 @@ This template provides tools to streamline setup and maintenance, letting you fo
   - [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/): A sleek, responsive theme for MkDocs documentation sites.
 
 - Code Quality/Automation
-  - [Pre-commit hooks](https://pre-commit.com/): A framework for managing and running code quality hooks before commits.
+  - [Ruff](https://docs.astral.sh/ruff/): The single linter and formatter, run on every commit through [pre-commit](https://pre-commit.com/) and kept up to date by [pre-commit.ci](https://pre-commit.ci/).
 
 - Release Management
   - [Bump2version](https://github.com/c4urself/bump2version):  A tool to automate version number management in your project.
+  - [Cruft](https://cruft.github.io/cruft/): Keeps the project in sync with this template; the generated `template-update.yaml` workflow opens the update pull requests for you.
 
 - Testing
   - [Pytest](https://docs.pytest.org/en/stable/):  A powerful testing framework for writing and running Python tests.
@@ -42,6 +43,9 @@ In six easy steps you will have a ready to use Python project with batteries inc
   cruft create https://github.com/saezlab/python-project.git --checkout master
   ```
 
+  The first structural question is `project_profile`, which decides how much
+  scaffolding you get — see [Project profiles](#project-profiles) below.
+
 **2. Navigate to Your New Project Directory**
 ```bash
 cd <my-project> # replace with the name of your project
@@ -58,7 +62,7 @@ source .venv/bin/activate
 
   Install all required and optional dependencies (development, testing, docs):
   ```bash
-  uv pip install ".[dev,tests,docs]"
+  uv pip install ".[dev,tests,docs]"   # drop `docs` outside the `package` profile
   ```
 
 **5. Install and update pre-commit hooks**
@@ -94,6 +98,58 @@ cruft update
 
 Saez-Rodriguez Group Team!
 
+## Project profiles
+
+`project_profile` decides how much scaffolding is generated. Everything a
+profile does not include is simply absent — there is nothing to delete
+afterwards.
+
+| | `package` (default) | `workflow` | `tiny` |
+| --- | --- | --- | --- |
+| Intended for | a distributed library | an analysis or pipeline repository | a scratch or single-purpose repository |
+| `pyproject.toml`, ruff, pre-commit | yes | yes | yes |
+| `tests/` and pytest | yes | yes | yes |
+| Documentation | full mkdocs site | `README.md` + `docs/quickstart.md` | `README.md` |
+| CI test matrix | every supported Python | oldest and newest supported Python | none |
+| `build.yaml`, `release.yaml`, `template-update.yaml` | yes | yes | no |
+| `docs.yaml` (GitHub Pages) | yes | no | no |
+| `.bumpversion.cfg` | yes | no | no |
+| Coverage config | yes | yes | no |
+
+The CI matrix follows the `python_version` answer rather than a fixed list: a
+project that requires 3.12 is tested on 3.12 and 3.13, never on the versions it
+declares it does not support.
+
+`include_security_workflow` (a `bandit` scan) and `include_multiversion_testing`
+(a local multi-version test helper script) stay as separate answers, so they can
+be switched on for any profile that has a `.github` directory.
+
+## Keeping a project in sync with the template
+
+Projects created with `cruft create` record the template commit in
+`.cruft.json`. The generated `template-update.yaml` workflow runs `cruft update`
+monthly and opens a pull request with whatever changed here. The paths a project
+owns rather than inherits — its README, its source, its tests, its documentation
+pages — are listed under `[tool.cruft] skip` in the generated `pyproject.toml`
+and are never overwritten.
+
+For the workflow to be able to open that pull request, enable *Allow GitHub
+Actions to create and approve pull requests* under Settings → Actions → General.
+
+## Code quality
+
+The generated `.pre-commit-config.yaml` uses **ruff** as the only Python linter
+and the only Python formatter. The hooks that ruff supersedes — `isort`,
+`black`, `blacken-docs`, `check-ast`, the `pretty-format-*` formatters — are
+deliberately not there; `ruff format` covers the code blocks in docstrings via
+`docstring-code-format`. What remains next to it are the five checks ruff does
+not do: `check-merge-conflict`, `detect-private-key`, `check-yaml`,
+`end-of-file-fixer` and `mixed-line-ending`.
+
+The config carries a `ci:` block, so enabling the repository on
+[pre-commit.ci](https://results.pre-commit.ci) is enough to get monthly hook
+updates and autofix commits pushed to your pull requests.
+
 ## Continuous integration
 
 The generated project comes with the following GitHub Actions workflows in
@@ -101,11 +157,15 @@ The generated project comes with the following GitHub Actions workflows in
 
 | Workflow | Trigger | What it does |
 | --- | --- | --- |
-| `test.yaml` | push and pull request on `main`/`master`, twice a month, manual | Runs the unit tests with coverage on Python 3.10–3.13, the ruff lint and format checks, and a strict mkdocs build. The `check` job at the end aggregates all of them. |
+| `test.yaml` | push and pull request on `main`/`master`, twice a month, manual | Runs the unit tests with coverage on every supported Python, the ruff lint and format checks, and (in the `package` profile) a strict mkdocs build. The `check` job at the end aggregates all of them. |
 | `build.yaml` | push and pull request on `main`/`master` | Builds the sdist and the wheel with `uv build` and validates the distribution metadata with `twine check --strict`. |
 | `docs.yaml` | push on `main`/`master`, manual | Publishes the mkdocs site to GitHub Pages with `mkdocs gh-deploy`. |
 | `release.yaml` | GitHub release published | Builds and uploads the distribution to PyPI. |
 | `security.yaml` | push and pull request on `main`/`master` | Runs `bandit`. Generated only when `include_security_workflow` is `yes`. |
+| `template-update.yaml` | monthly, manual | Runs `cruft update` and opens a pull request with the changes made to this template. |
+
+The `tiny` profile generates no workflows at all, and the `workflow` profile
+generates everything except `docs.yaml`.
 
 All workflows declare a least-privilege `permissions` block and a
 `concurrency` group, so that a new push cancels the superseded runs.

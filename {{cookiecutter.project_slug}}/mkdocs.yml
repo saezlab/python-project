@@ -1,64 +1,55 @@
-site_name: '{{ cookiecutter.package_name }}'
-site_url: https://saezlab.github.io/{{ cookiecutter.package_name }}
+site_name: '{{ cookiecutter.project_name }}'
+site_description: '{{ cookiecutter.short_description }}'
+site_url: https://{{ cookiecutter.github_organization }}.github.io/{{ cookiecutter.project_slug }}
+repo_url: {{ cookiecutter.project_repo }}
+repo_name: {{ cookiecutter.github_organization }}/{{ cookiecutter.project_slug }}
+edit_uri: edit/main/docs/
+
 theme:
     name: material
+    icon:
+        logo: material/package-variant-closed
     font:
         text: Lato
         code: Roboto Mono
     features:
     -   content.code.copy
     -   content.action.edit
-    -   navigation.tabs
     -   navigation.instant
     -   navigation.footer
+    -   navigation.top
+    #  The colors live in `docs/assets/omnipath-theme.css`, the palette only
+    #  selects them: `primary: custom` and `accent: custom` tell Material to
+    #  read `--md-primary-fg-color` / `--md-accent-fg-color` from there.
     palette:
-    -   scheme: default
-        primary: teal
-        accent: light blue
+    -   media: '(prefers-color-scheme: light)'
+        scheme: default
+        primary: custom
+        accent: custom
         toggle:
             icon: material/toggle-switch
             name: Switch to dark mode
-    -   scheme: slate
-        primary: teal
-        accent: light blue
+    -   media: '(prefers-color-scheme: dark)'
+        scheme: slate
+        primary: custom
+        accent: custom
         toggle:
             icon: material/toggle-switch-off
             name: Switch to light mode
 
+extra_css:
+-   assets/omnipath-theme.css
+
 #=======    Website Navigation settings   =====
 nav:
 -   Home: index.md
-
--   About:
-    -   Project: '{{ cookiecutter.project_slug }}-project/project.md'
-    -   Design philosophy: '{{ cookiecutter.project_slug }}-project/design-philosophy.md'
-    -   Use Cases: '{{ cookiecutter.project_slug }}-project/use-cases.md'
-    -   About: about.md
-
--   Get Started:
+-   Getting Started:
     -   Installation: installation.md
-    -   Quickstart: learn/tutorials/quickstart.md
-
--   Learn:
-    -   Tutorials:
-        -   Basics: learn/tutorials/tutorial0001_basics.md
-        -   HowTo / FAQ:
-            -   learn/guides/index.md
-
--   Explanations:
-    -   learn/explanation/index.md
-
--   Reference:
-    -   API Documentation:
-        -   '{{ cookiecutter.package_name }}':
-            -   _metadata: reference/source/{{ cookiecutter.package_name}}/_metadata-docs.md
--   Community:
-    -   Join Us: community/index.md
-    -   Where to Start: community/contribute.md
-    -   Contribute to the Documentation: community/contribute-docs.md
-    -   Contribute to the Code Base: community/contribute-codebase.md
-
-
+    -   Quick Start: quickstart.md
+-   User Guide: guide.md
+-   API Reference: 'reference/{{ cookiecutter.package_name }}.md'
+-   Contributing: contributing.md
+-   About: about.md
 
 #=======    Extension settings (sorted alphabetically)  =====
 markdown_extensions:
@@ -103,5 +94,4 @@ plugins:
                     show_signature_annotations: false
                     signature_crossrefs: true
 
-
-copyright: © Copyright 2021-2025, Saez-lab development team.
+copyright: © {{ cookiecutter.__year }} {{ cookiecutter.copyright_holder }}

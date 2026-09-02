@@ -1,37 +1,30 @@
-# Installation guide
+# Installation
 
-We strongly recommend installing a few prerequisites to ensure a smooth experience. These prerequisites are:
+## From PyPI
 
-1. *Python 3* (version >= 3.10)
-      - [Install Python 3](https://docs.python.org/3/using/index.html)
-2. *Poetry* (Python packaging and dependency manager)
-      - [Install Poetry](https://python-poetry.org/docs/#installation)
-3. *git* (version control manager)
-      - [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-4. *Docker* (containerization technology) [optional]
-      - [Install Docker](https://docs.docker.com/engine/)
+```bash
+pip install {{ cookiecutter.project_slug }}
+```
 
-!!! tip "Tip"
-    If you are missing any of those pre-requisites, **please follow the installation guide in each resource before you continue**.
+## From source
 
+```bash
+git clone {{ cookiecutter.project_repo }}
+cd {{ cookiecutter.project_slug }}
+pip install -e .
+```
 
-## Checking prerequisites
+## For development
 
-You can verify access to these components in your terminal:
+The project is developed with [uv](https://docs.astral.sh/uv/). To get an
+environment with the test, documentation and development dependencies:
 
-1. `Python` version 3.10 or higher.
-   ```bash
-   python --version
-   ```
-2. `Poetry`
-   ```bash
-   poetry --version
-   ```
-3. `git`
-   ```bash
-   git --version
-   ```
-4. `Docker`
-   ```bash
-   docker --version
-   ```
+```bash
+uv venv --python {{ cookiecutter.python_version }}
+uv pip install -e '.[dev,tests{% if cookiecutter.project_profile == 'package' %},docs{% endif %}]'
+pre-commit install
+```
+
+## Requirements
+
+{{ cookiecutter.project_name }} requires Python {{ cookiecutter.python_version }} or newer.

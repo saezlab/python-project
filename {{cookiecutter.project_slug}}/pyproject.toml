@@ -31,64 +31,78 @@ version = "0.0.1"
 dev = [
     "distlib",
     "pre-commit",
+    "cruft",
+{%- if cookiecutter.project_profile == 'package' %}
     "bump2version",
+{%- endif %}
+{%- if cookiecutter.project_profile != 'tiny' %}
     "twine",
+{%- endif %}
 ]
+{% if cookiecutter.project_profile == 'package' -%}
 docs = [
     "mkdocs-material>=9.6.14",
     "pymdown-extensions>=10.15",
     "mkdocstrings[python]>=0.29.1,<0.30"
 ]
+{% endif -%}
 {% if cookiecutter.include_security_workflow == 'yes' -%}
 security = [
-    "bandit"
+    "bandit[toml]"
 ]
 {% endif -%}
 tests = [
     "pytest>=6.0",
     "pytest-cov",
     "coverage>=6.0",
-    "codecov-cli>=10.2.0",
-    "diff_cover",
     "ruff",
 ]
 
 [project.urls]
+{% if cookiecutter.project_profile == 'package' -%}
 Documentation = "https://{{ cookiecutter.github_organization }}.github.io/{{ cookiecutter.project_slug }}"
+{% endif -%}
 Homepage = "{{ cookiecutter.project_repo }}"
 Issues = "{{ cookiecutter.project_repo }}/issues"
 Repository = "{{ cookiecutter.project_repo }}"
 
-
+{% if cookiecutter.include_security_workflow == 'yes' -%}
 [tool.bandit]
 exclude_dirs = [".venv", "venv", "build", "dist"]
 skips = [
     "B101"  # Name: assert_used
 ]
 
+{% endif -%}
 [tool.coverage.run]
 omit = [
 	"**/test_*.py",
 ]
 source = ["{{ cookiecutter.package_name }}"]
 
+# Paths `cruft update` must never overwrite: everything whose content belongs
+# to this project rather than to the template.
 [tool.cruft]
 skip = [
+  "README.md",
   "tests",
-  "{{ cookiecutter.package_name }}/__init__.py",
-  "{{ cookiecutter.package_name }}/_metadata.py",
-  "docs/api.md",
-  "docs/changelog.md",
-  "docs/references.bib",
-  "docs/references.md",
-  "docs/notebooks/example.ipynb",
+  "{{ cookiecutter.package_name }}",
+{%- if cookiecutter.project_profile == 'package' %}
+  "docs/index.md",
+  "docs/about.md",
+  "docs/guide.md",
+  "docs/quickstart.md",
+  "docs/reference",
+{%- elif cookiecutter.project_profile == 'workflow' %}
+  "docs/quickstart.md",
+{%- endif %}
 ]
 
 {% if cookiecutter.project_name.lower().replace("-", "_") != cookiecutter.package_name -%}
 [tool.hatch.build.targets.wheel]
 packages = [ "{{ cookiecutter.package_name }}" ]
-{% endif -%}
 
+{% endif -%}
 [tool.pytest.ini_options]
 addopts = [
     "--import-mode=importlib",  # allow using test files with same name
@@ -101,27 +115,22 @@ testpaths = [
 ]
 xfail_strict = true
 
-[tool.rstcheck]
-ignore_directives = [
-    "automodule",
-    "toctree",
-]
-ignore_messages = '(Unknown target name:.*|No (directive|role) entry for "(auto)?(class|method|property|function|func|mod|attr)" in module "docutils\.parsers\.rst\.languages\.en"\.)'
-ignore_roles = ["ref"]
-report_level = "INFO"
-
 [tool.ruff]
 extend-include = [ "*.ipynb" ]
 line-length = 80
-target-version = "py312"
+target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
 
 [tool.ruff.format]
+# Replaces `blacken-docs`: formats the code blocks inside docstrings.
+docstring-code-format = true
 quote-style = "single"
 
 [tool.ruff.lint]
+{% if cookiecutter.project_profile == 'package' -%}
 exclude = [
-    "docs/_build"
+    "site"
 ]
+{% endif -%}
 ignore = [
     # flake8-bugbear (B)
     "B008",  # Name: function-call-in-default-argument
@@ -186,8 +195,9 @@ section-order = [
 
 [tool.ruff.lint.per-file-ignores]
 "*/__init__.py" = ["D104", "F401"]
+{% if cookiecutter.project_profile != 'tiny' -%}
 "docs/*" = ["I"]
-"docs/src/conf.py" = ["D100"]
+{% endif -%}
 "tests/*" = ["D"]
 "tests/conftest.py" = ["D101", "D102", "D103", "E402"]
 

@@ -1,0 +1,20 @@
+# Style for the template repository itself (the hooks). The generated
+# project's own ruff configuration lives in
+# `{{cookiecutter.project_slug}}/pyproject.toml`.
+line-length = 80
+
+[format]
+quote-style = "single"
+
+[lint]
+select = ["D", "E", "F", "I", "W", "Q", "UP"]
+ignore = ["D203", "D213", "E501"]
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+
+[lint.isort]
+lines-after-imports = 2
+
+[lint.pydocstyle]
+convention = "google"
