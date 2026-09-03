@@ -11,6 +11,8 @@ This template provides tools to streamline setup and maintenance, letting you fo
 
 - Code Quality/Automation
   - [Ruff](https://docs.astral.sh/ruff/): The single linter and formatter, run on every commit through [pre-commit](https://pre-commit.com/) and kept up to date by [pre-commit.ci](https://pre-commit.ci/).
+  - [mypy](https://mypy.readthedocs.io/): Static type checking, configured strictly and run as its own CI job.
+  - [zizmor](https://docs.zizmor.sh/): Static analysis of the GitHub Actions workflows themselves, run both as a pre-commit hook and in CI.
 
 - Release Management
   - [Bump2version](https://github.com/c4urself/bump2version):  A tool to automate version number management in your project.
@@ -150,6 +152,32 @@ The config carries a `ci:` block, so enabling the repository on
 [pre-commit.ci](https://results.pre-commit.ci) is enough to get monthly hook
 updates and autofix commits pushed to your pull requests.
 
+**Type checking** is [mypy](https://mypy.readthedocs.io/) in `strict` mode,
+configured under `[tool.mypy]` in the generated `pyproject.toml` and installed
+by the `typing` extra. It is deliberately *not* a pre-commit hook: a hook runs
+in its own isolated environment, without the project's dependencies, and
+reports import errors that are not real. It runs instead as the `typecheck` job
+of `test.yaml`, which installs the project first. Strict from the first commit
+is the cheap moment to start; the ruff configuration already requires
+annotations everywhere (`ANN`), so there is nothing extra to write. A
+third-party package that ships no types is exempted case by case through a
+`[[tool.mypy.overrides]]` block — there is a commented-out example in the
+generated `pyproject.toml`. Generated packages carry a
+[PEP 561](https://peps.python.org/pep-0561/) `py.typed` marker, so the
+annotations are visible to whoever depends on them.
+
+**Workflow linting** is [zizmor](https://docs.zizmor.sh/), which audits the
+GitHub Actions workflows for the things that go wrong in CI rather than in
+Python: credential persistence, shell injection through `${{ ... }}`
+expansion, over-broad `permissions`, unpinned actions. It runs as a pre-commit
+hook and in the `lint` job of `test.yaml`, where a token is available so the
+audits that need the GitHub API also run. Its configuration is
+`.github/zizmor.yml`: actions from the publishers this template already depends
+on may be pinned to a release tag, and **every other action has to be pinned to
+a commit hash**. Hash pinning everything without something like Dependabot to
+move the hashes forward only trades a supply-chain risk for a staleness one,
+which is why the split is there rather than a blanket exemption.
+
 ## Continuous integration
 
 The generated project comes with the following GitHub Actions workflows in
@@ -157,7 +185,7 @@ The generated project comes with the following GitHub Actions workflows in
 
 | Workflow | Trigger | What it does |
 | --- | --- | --- |
-| `test.yaml` | push and pull request on `main`/`master`, twice a month, manual | Runs the unit tests with coverage on every supported Python, the ruff lint and format checks, and (in the `package` profile) a strict mkdocs build. The `check` job at the end aggregates all of them. |
+| `test.yaml` | push and pull request on `main`/`master`, twice a month, manual | Runs the unit tests with coverage on every supported Python, the ruff lint and format checks, `zizmor` over the workflows, `mypy` over the package, and (in the `package` profile) a strict mkdocs build. The `check` job at the end aggregates all of them. |
 | `build.yaml` | push and pull request on `main`/`master` | Builds the sdist and the wheel with `uv build` and validates the distribution metadata with `twine check --strict`. |
 | `docs.yaml` | push on `main`/`master`, manual | Publishes the mkdocs site to GitHub Pages with `mkdocs gh-deploy`. |
 | `release.yaml` | GitHub release published | Builds and uploads the distribution to PyPI. |
@@ -168,7 +196,11 @@ The `tiny` profile generates no workflows at all, and the `workflow` profile
 generates everything except `docs.yaml`.
 
 All workflows declare a least-privilege `permissions` block and a
-`concurrency` group, so that a new push cancels the superseded runs.
+`concurrency` group, so that a new push cancels the superseded runs. They are
+checked out without persisted credentials wherever the job does not need to
+push, and `zizmor` keeps them that way; the two places that do need the
+credentials — the GitHub Pages deployment and the template-update pull
+request — carry an inline `# zizmor: ignore[artipacked]` saying why.
 
 **Branch protection**: require the single `All checks passed` check from
 `test.yaml` instead of the individual jobs. It is an

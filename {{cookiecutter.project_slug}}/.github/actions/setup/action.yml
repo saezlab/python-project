@@ -22,13 +22,18 @@ runs:
         with:
             enable-cache: true
             python-version: ${{ '{{' }} inputs.python-version {{ '}}' }}
+    # The inputs are passed through the environment rather than interpolated
+    # into the script: an expression expanded straight into a `run:` block is
+    # a shell injection waiting to happen (zizmor's `template-injection`).
     -   name: Create the virtualenv and install the project
         shell: bash
+        env:
+            PYTHON_VERSION: ${{ '{{' }} inputs.python-version {{ '}}' }}
+            EXTRAS: ${{ '{{' }} inputs.extras {{ '}}' }}
         run: |
-            uv venv .venv --python '${{ '{{' }} inputs.python-version {{ '}}' }}'
-            extras='${{ '{{' }} inputs.extras {{ '}}' }}'
-            if [ -n "$extras" ]; then
-                uv pip install --python .venv/bin/python -e ".[$extras]"
+            uv venv .venv --python "$PYTHON_VERSION"
+            if [ -n "$EXTRAS" ]; then
+                uv pip install --python .venv/bin/python -e ".[$EXTRAS]"
             else
                 uv pip install --python .venv/bin/python -e .
             fi

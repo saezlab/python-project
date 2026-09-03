@@ -60,3 +60,13 @@ repos:
     -   id: mixed-line-ending
         args: [--fix=lf]
         stages: [pre-commit]
+{% if cookiecutter.project_profile != 'tiny' %}
+    # zizmor is the static analyser for GitHub Actions workflows; its
+    # configuration lives in `.github/zizmor.yml`. It is offline here, so it
+    # skips the audits that need the GitHub API; CI runs it with a token.
+-   repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.30.0
+    hooks:
+    -   id: zizmor
+        stages: [pre-commit]
+{% endif -%}

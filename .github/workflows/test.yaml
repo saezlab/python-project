@@ -25,6 +25,19 @@ jobs:
             run:
                 shell: bash -e {0}  # -e to fail on error
 
+        # The matrix values are handed to the steps through the environment.
+        # Expanding `${{ matrix.* }}` straight into a `run:` block is the
+        # shell-injection pattern zizmor's `template-injection` audit is about,
+        # and the habit is worth keeping even where the values are our own.
+        env:
+            PROJECT_NAME: ${{ matrix.project_name }}
+            PROJECT_PROFILE: ${{ matrix.profile }}
+            PACKAGE_NAME: ${{ matrix.package_name }}
+            PYTHON_VERSION: ${{ matrix.python }}
+            EXTRAS: ${{ matrix.extras }}
+            INCLUDE_SECURITY_WORKFLOW: ${{ matrix.security && 'yes' || 'no' }}
+            INCLUDE_MULTIVERSION_TESTING: ${{ matrix.multiversion && 'yes' || 'no' }}
+
         strategy:
             fail-fast: false
             # One entry per combination worth paying for rather than a full
@@ -47,7 +60,7 @@ jobs:
                     project_name: Project Name
                     package_name: project_name
                     security: true
-                    extras: dev,tests,docs
+                    extras: dev,tests,docs,typing
                     python: '3.10'
                     os: ubuntu-latest
                 -   profile: package
@@ -55,28 +68,28 @@ jobs:
                     package_name: project_name
                     security: true
                     multiversion: true
-                    extras: dev,tests,docs
+                    extras: dev,tests,docs,typing
                     python: '3.13'
                     os: ubuntu-latest
                 -   profile: package
                     project_name: Project Name
                     package_name: project_name
                     security: true
-                    extras: dev,tests,docs
+                    extras: dev,tests,docs,typing
                     python: '3.13'
                     os: macos-latest
                 -   profile: workflow
                     project_name: alt_name
                     package_name: alt_name
                     security: false
-                    extras: dev,tests
+                    extras: dev,tests,typing
                     python: '3.13'
                     os: ubuntu-latest
                 -   profile: tiny
                     project_name: tiny_thing
                     package_name: tiny_thing
                     security: false
-                    extras: dev,tests
+                    extras: dev,tests,typing
                     python: '3.13'
                     os: ubuntu-latest
 
@@ -97,13 +110,6 @@ jobs:
         # generated project carries a `.cruft.json` and the scaffold is proven
         # to be `cruft update`-compatible (SC-016).
         -   name: Instantiate the template
-            id: instantiate
-            env:
-                PROJECT_NAME: ${{ matrix.project_name }}
-                PROJECT_PROFILE: ${{ matrix.profile }}
-                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.security && 'yes' || 'no' }}
-                INCLUDE_MULTIVERSION_TESTING: ${{ matrix.multiversion && 'yes' || 'no' }}
-                PYTHON_VERSION: ${{ matrix.python }}
             run: |
                 uv run --no-project --with cruft python - <<'PY'
                 import os
@@ -117,34 +123,30 @@ jobs:
                     'include_multiversion_testing': os.environ['INCLUDE_MULTIVERSION_TESTING'],
                     'python_version': os.environ['PYTHON_VERSION'],
                 }
-                path = os.path.relpath(
-                    cruft.create(
-                        '.',
-                        checkout = os.environ['GITHUB_SHA'],
-                        no_input = True,
-                        extra_context = overrides,
-                    ),
+                path = cruft.create(
+                    '.',
+                    checkout = os.environ['GITHUB_SHA'],
+                    no_input = True,
+                    extra_context = overrides,
                 )
 
-                with open(os.environ['GITHUB_OUTPUT'], 'a') as fp:
-                    fp.write(f'project-root={path}\n')
+                # Every later step works in `_generated/`, so that none of them
+                # has to interpolate the project slug into a shell command.
+                os.rename(path, '_generated')
 
-                print(f'Generated the project in `{path}`.')
+                print(f'Generated `{os.path.basename(path)}` in `_generated`.')
                 PY
 
         -   name: Check the layout the profile promises
-            env:
-                PROJECT_PROFILE: ${{ matrix.profile }}
-                INCLUDE_SECURITY_WORKFLOW: ${{ matrix.security && 'yes' || 'no' }}
-                INCLUDE_MULTIVERSION_TESTING: ${{ matrix.multiversion && 'yes' || 'no' }}
+            working-directory: _generated
             run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
                 uv run --no-project python - <<'PY'
                 import os
                 import sys
                 from pathlib import Path
 
                 profile = os.environ['PROJECT_PROFILE']
+                package = os.environ['PACKAGE_NAME']
                 security = os.environ['INCLUDE_SECURITY_WORKFLOW'] == 'yes'
 
                 # (path, present in `package`, in `workflow`, in `tiny`)
@@ -153,6 +155,7 @@ jobs:
                     ('.pre-commit-config.yaml', True, True, True),
                     ('.cruft.json', True, True, True),
                     ('tests/test_placeholder.py', True, True, True),
+                    (f'{package}/py.typed', True, True, True),
                     ('.bumpversion.cfg', True, False, False),
                     ('mkdocs.yml', True, False, False),
                     ('docs/index.md', True, False, False),
@@ -166,6 +169,7 @@ jobs:
                     ('.github/workflows/template-update.yaml', True, True, False),
                     ('.github/workflows/docs.yaml', True, False, False),
                     ('.codecov.yaml', True, True, False),
+                    ('.github/zizmor.yml', True, True, False),
                 ]
                 column = {'package': 1, 'workflow': 2, 'tiny': 3}[profile]
 
@@ -204,8 +208,8 @@ jobs:
 
         -   name: Check that the generated workflows are valid YAML
             if: matrix.profile != 'tiny'
+            working-directory: _generated
             run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
                 uv run --no-project --with pyyaml python - <<'PY'
                 import sys
                 from pathlib import Path
@@ -227,48 +231,56 @@ jobs:
             uses: actions/cache@v6
             with:
                 path: ~/.cache/pre-commit
-                key: pre-commit-4|${{ matrix.python }}|${{ hashFiles(format('{0}/.pre-commit-config.yaml', steps.instantiate.outputs.project-root)) }}
+                key: pre-commit-5|${{ matrix.python }}|${{ hashFiles('_generated/.pre-commit-config.yaml') }}
 
         -   name: Run pre-commit
+            working-directory: _generated
             run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
                 git init --quiet --initial-branch=main .
                 git add -A
                 uv run --no-project --with pre-commit pre-commit run \
                     --color=always --show-diff-on-failure --all-files
 
         -   name: Install the generated project
+            working-directory: _generated
             run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
-                uv venv .venv --python '${{ matrix.python }}'
-                uv pip install --python .venv/bin/python -e '.[${{ matrix.extras }}]'
+                uv venv .venv --python "$PYTHON_VERSION"
+                uv pip install --python .venv/bin/python -e ".[$EXTRAS]"
 
         -   name: Lint the generated project
+            working-directory: _generated
             run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
                 .venv/bin/ruff check --output-format=github .
                 .venv/bin/ruff format --check --diff .
 
+        -   name: Type check the generated project
+            working-directory: _generated
+            run: .venv/bin/mypy
+
+        -   name: Lint the workflows of the generated project
+            if: matrix.profile != 'tiny'
+            working-directory: _generated
+            env:
+                GH_TOKEN: ${{ github.token }}
+            run: uvx zizmor .github
+
         -   name: Run the tests of the generated project
-            run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
-                .venv/bin/pytest -v
+            working-directory: _generated
+            run: .venv/bin/pytest -v
 
         -   name: Build the documentation of the generated project
             if: matrix.profile == 'package'
-            run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
-                .venv/bin/mkdocs build --strict
+            working-directory: _generated
+            run: .venv/bin/mkdocs build --strict
 
         -   name: Run bandit on the generated project
             if: matrix.security
-            run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
-                uvx --from 'bandit[toml]' bandit -c pyproject.toml -r ${{ matrix.package_name }}
+            working-directory: _generated
+            run: uvx --from 'bandit[toml]' bandit -c pyproject.toml -r "$PACKAGE_NAME"
 
         -   name: Build and check the distribution of the generated project
+            working-directory: _generated
             run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
                 uv build
                 uvx twine check --strict dist/*
 
@@ -276,9 +288,32 @@ jobs:
         # commit it was just created from, otherwise `cruft update` would offer
         # a spurious diff on day one.
         -   name: Check that the project is in sync with the template
-            run: |
-                cd "${{ steps.instantiate.outputs.project-root }}"
-                uv run --no-project --with cruft cruft check
+            working-directory: _generated
+            run: uv run --no-project --with cruft cruft check
+
+    workflows:
+        name: Lint the workflow definitions
+        runs-on: ubuntu-latest
+        steps:
+        -   name: Checkout
+            uses: actions/checkout@v7
+            with:
+                persist-credentials: false
+
+        -   name: Install uv
+            uses: astral-sh/setup-uv@v10.0.1
+            with:
+                enable-cache: true
+
+        # `GH_TOKEN` turns on the audits that need the GitHub API, such as the
+        # one for actions with known vulnerabilities. The workflows under
+        # `{{cookiecutter.project_slug}}/` are Jinja templates rather than
+        # workflows, so they are not passed to zizmor; the CI of a generated
+        # project audits its own copies.
+        -   name: Run zizmor
+            env:
+                GH_TOKEN: ${{ github.token }}
+            run: uvx zizmor .github
 
     # Single gate to require in the branch protection rules, so that the
     # required checks do not have to be updated when the matrix changes.
@@ -286,7 +321,7 @@ jobs:
     check:
         name: All checks passed
         if: always()
-        needs: [test]
+        needs: [test, workflows]
         runs-on: ubuntu-latest
         steps:
         -   uses: re-actors/alls-green@v1.3.0

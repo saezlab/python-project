@@ -33,7 +33,10 @@ jobs:
             contents: write
             pull-requests: write
         steps:
-        -   uses: actions/checkout@v7
+        # The credentials this checkout leaves behind are what
+        # `create-pull-request` pushes the update branch with, so they are
+        # deliberately kept.
+        -   uses: actions/checkout@v7  # zizmor: ignore[artipacked]
             with:
                 fetch-depth: 0
 

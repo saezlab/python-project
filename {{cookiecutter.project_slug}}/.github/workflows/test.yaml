@@ -41,7 +41,7 @@ jobs:
             with:
                 fetch-depth: 0
                 persist-credentials: false
-        -   uses: ./.github/actions/setup
+        -   uses: ./.github/actions/setup  # zizmor: ignore[self-repository]
             with:
                 python-version: ${{ '{{' }} matrix.python-version {{ '}}' }}
                 extras: tests
@@ -64,7 +64,7 @@ jobs:
             with:
                 fetch-depth: 0
                 persist-credentials: false
-        -   uses: ./.github/actions/setup
+        -   uses: ./.github/actions/setup  # zizmor: ignore[self-repository]
             with:
                 python-version: '{{ _latest }}'
                 extras: tests
@@ -72,6 +72,27 @@ jobs:
             run: .venv/bin/ruff check --output-format=github .
         -   name: Run ruff format check
             run: .venv/bin/ruff format --check --diff .
+        -   name: Lint the workflow definitions
+            # `GH_TOKEN` turns on the audits that need the GitHub API, such as
+            # the one for actions with known vulnerabilities.
+            env:
+                GH_TOKEN: ${{ '{{' }} github.token {{ '}}' }}
+            run: uvx zizmor .github
+
+    typecheck:
+        name: Type check
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v7
+            with:
+                fetch-depth: 0
+                persist-credentials: false
+        -   uses: ./.github/actions/setup  # zizmor: ignore[self-repository]
+            with:
+                python-version: '{{ _latest }}'
+                extras: typing
+        -   name: Run mypy
+            run: .venv/bin/mypy
 {% if cookiecutter.project_profile == 'package' %}
     docs:
         name: Documentation build
@@ -81,7 +102,7 @@ jobs:
             with:
                 fetch-depth: 0
                 persist-credentials: false
-        -   uses: ./.github/actions/setup
+        -   uses: ./.github/actions/setup  # zizmor: ignore[self-repository]
             with:
                 python-version: '{{ _latest }}'
                 extras: docs
@@ -94,7 +115,7 @@ jobs:
     check:
         name: All checks passed
         if: always()
-        needs: [test, lint{% if cookiecutter.project_profile == 'package' %}, docs{% endif %}]
+        needs: [test, lint, typecheck{% if cookiecutter.project_profile == 'package' %}, docs{% endif %}]
         runs-on: ubuntu-latest
         steps:
         -   uses: re-actors/alls-green@v1.3.0

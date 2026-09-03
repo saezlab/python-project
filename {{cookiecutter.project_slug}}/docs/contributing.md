@@ -11,7 +11,7 @@ approach can be agreed on before the work is done.
 git clone {{ cookiecutter.project_repo }}
 cd {{ cookiecutter.project_slug }}
 uv venv --python {{ cookiecutter.python_version }}
-uv pip install -e '.[dev,tests{% if cookiecutter.project_profile == 'package' %},docs{% endif %}]'
+uv pip install -e '.[dev,tests,typing{% if cookiecutter.project_profile == 'package' %},docs{% endif %}]'
 pre-commit install
 ```
 
@@ -40,11 +40,37 @@ in VS Code or Cursor, add to `.vscode/settings.json`
 }
 ```
 
+The pre-commit hooks also run
+[zizmor](https://docs.zizmor.sh/) over `.github/`, which audits the GitHub
+Actions workflows for credential persistence, shell injection through
+`${{ '{{' }} ... {{ '}}' }}` expansion and unpinned actions. Its configuration,
+including which action publishers may be pinned to a tag rather than a commit
+hash, is `.github/zizmor.yml`.
+
 To check everything the CI checks before pushing:
 
 ```bash
 pre-commit run --all-files
 ```
+
+## Type checking
+
+[mypy](https://mypy.readthedocs.io/) runs in `strict` mode over
+`{{ cookiecutter.package_name }}/`; the settings are in `pyproject.toml`.
+
+```bash
+mypy
+```
+
+It is not a pre-commit hook, because a hook would run in its own environment
+without this project's dependencies and report import errors that do not
+exist. It runs in CI instead, in a job that installs the project first, so run
+it locally in your development environment before pushing.
+
+When a dependency ships no type information, mypy fails with `import-untyped`.
+Exempt that one package with a `[[tool.mypy.overrides]]` block in
+`pyproject.toml` — there is a commented-out example there — rather than
+turning `ignore_missing_imports` on globally.
 
 ## Tests
 

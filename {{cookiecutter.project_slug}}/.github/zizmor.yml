@@ -1,0 +1,26 @@
+# Configuration for zizmor (https://docs.zizmor.sh), the static analyser for
+# GitHub Actions workflows. It runs in the `lint` job of `test.yaml` and as a
+# pre-commit hook; run it by hand with
+#
+#     uvx zizmor .github
+#
+# ======================================================
+# =======              audit rules              ========
+# ======================================================
+rules:
+
+    # `unpinned-uses` requires a commit hash by default. Hash pinning without
+    # something like Dependabot to move the hashes forward means the actions
+    # silently go stale, so the publishers this template already depends on
+    # are trusted with a release tag instead. Anything else — including every
+    # action added to this project later — still has to be hash pinned.
+    unpinned-uses:
+        config:
+            policies:
+                actions/*: ref-pin
+                astral-sh/*: ref-pin
+                codecov/*: ref-pin
+                peter-evans/*: ref-pin
+                pypa/*: ref-pin
+                re-actors/*: ref-pin
+                '*': hash-pin

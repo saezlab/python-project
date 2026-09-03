@@ -35,3 +35,12 @@ repos:
     -   id: end-of-file-fixer
     -   id: mixed-line-ending
         args: [--fix=lf]
+
+    # zizmor is the static analyser for GitHub Actions workflows; its
+    # configuration lives in `.github/zizmor.yml`. The `exclude` above keeps it
+    # away from the workflows under `{{cookiecutter.project_slug}}/`, which are
+    # Jinja templates rather than workflows.
+-   repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.30.0
+    hooks:
+    -   id: zizmor

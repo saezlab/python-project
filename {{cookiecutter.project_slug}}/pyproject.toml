@@ -57,6 +57,9 @@ tests = [
     "coverage>=6.0",
     "ruff",
 ]
+typing = [
+    "mypy"
+]
 
 [project.urls]
 {% if cookiecutter.project_profile == 'package' -%}
@@ -103,6 +106,30 @@ skip = [
 packages = [ "{{ cookiecutter.package_name }}" ]
 
 {% endif -%}
+# Type checking runs in CI (the `typecheck` job of `test.yaml`), not as a
+# pre-commit hook: a hook would run mypy in its own isolated environment,
+# without this project's dependencies, and report import errors that are not
+# real. Run it locally with `mypy` after `pip install -e '.[typing]'`.
+[tool.mypy]
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-expr",
+    "truthy-bool"
+]
+files = ["{{ cookiecutter.package_name }}"]
+pretty = true
+python_version = "{{ cookiecutter.python_version }}"
+strict = true
+warn_unreachable = true
+
+# A third-party package that ships no type information makes `strict` fail
+# with `import-untyped`. Exempt such packages one by one here, rather than
+# turning `ignore_missing_imports` on for everything.
+#
+# [[tool.mypy.overrides]]
+# module = ["untyped_package.*"]
+# ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 addopts = [
     "--import-mode=importlib",  # allow using test files with same name

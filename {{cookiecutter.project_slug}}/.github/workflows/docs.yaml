@@ -20,14 +20,17 @@ jobs:
         name: Build and publish to GitHub Pages
         runs-on: ubuntu-latest
         steps:
-        -   uses: actions/checkout@v7
+        # `persist-credentials: false` everywhere else, but not here:
+        # `mkdocs gh-deploy` pushes the built site to the `gh-pages` branch
+        # with the credentials this checkout leaves behind.
+        -   uses: actions/checkout@v7  # zizmor: ignore[artipacked]
             with:
                 fetch-depth: 0
         -   name: Configure the git credentials
             run: |
                 git config user.name 'github-actions[bot]'
                 git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-        -   uses: ./.github/actions/setup
+        -   uses: ./.github/actions/setup  # zizmor: ignore[self-repository]
             with:
                 python-version: '{{ cookiecutter._python_versions[-1] }}'
                 extras: docs
